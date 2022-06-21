@@ -27,7 +27,68 @@ void muestraListaDemanda(Preparacion[],int);
 
 int main()
 {
-   
+int opcion;
+char continuar;
+int validosStock;
+int validosDemanda;
+StockIngrediente lista [TAM_MAX];
+StockIngrediente p;
+Preparacion listaDemanda [TAM_MAX];
+Preparacion P;
+
+despersistenciaStock(lista,&validosStock);
+mostrarStock(p);
+muestraListaStock(lista,validosStock);
+despercistenciaDemanda (listaDemanda,&validosDemanda);
+muestraDemanda(P);
+muestraListaDemanda(listaDemanda,validosDemanda);
+
+do
+{
+printf ("Ingrese opcion:\n");
+printf ("1. Ver ingredientes no utilizados\n");
+printf ("2. Ver productos no vendidos\n");
+printf ("3. Ver ingreso total del dia\n");
+printf ("4. Ver ganancia total del dia\n");
+scanf ("%i",&opcion);
+
+    switch (opcion)
+    {
+    case 1:
+        printf ("1. Ingredientes no utilizados\n");
+        break;
+    case 2:
+        printf ("2. Productos no vendidos\n");
+        break;
+    case 3:
+        printf ("3. Ingreso total del dia\n");
+        break;
+    case 4:
+        printf ("4. Ganancia total del dia\n");
+        break;
+    default:
+        printf ("La opcion ingresada no existe\n");
+        break;
+    }
+
+printf("Desea continuar?\n");
+fflush(stdin);
+scanf("%c",&continuar);
+
+system ("PAUSE");
+system ("cls");
+
+}while (continuar == 's' || continuar == 'S');
+
+
+////SUBMENU ventas
+//printf ("Ingrese la operacion que desea realizar:\n");
+////Cargar los precios de los preparados
+//printf ("1. Modificar precio de preparado\n");
+//printf ("2. Ingresar una nueva venta\n");
+//printf ("3. Devolucion de venta\n");
+
+
     return 0;
 }
 
