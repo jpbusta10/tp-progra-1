@@ -1,6 +1,7 @@
+
 #include <stdio.h>
 #include <stdlib.h>
-#define TAM_MAX 100
+#define TAM_MAX 20
 typedef struct
 {
 char nombre_ingrediente[20];
@@ -45,10 +46,13 @@ int opcion;
 char continuar;
 int validosStock;
 int validosDemanda;
+int validosRecetas;
 StockIngrediente lista [TAM_MAX];
 StockIngrediente p;
 Preparacion listaDemanda [TAM_MAX];
 Preparacion P;
+Receta list[TAM_MAX];
+Receta r;
 
 despersistenciaStock(lista,&validosStock);
 mostrarStock(p);
@@ -56,7 +60,10 @@ muestraListaStock(lista,validosStock);
 despercistenciaDemanda (listaDemanda,&validosDemanda);
 muestraDemanda(P);
 muestraListaDemanda(listaDemanda,validosDemanda);
-    
+despersistenciaReceta(list,&validosRecetas);
+muestraReceta(r);
+muestraListaRecetas(list,validosRecetas);
+
 do
 {
 printf ("Ingrese opcion:\n");
@@ -93,7 +100,7 @@ system ("PAUSE");
 system ("cls");
 
 }while (continuar == 's' || continuar == 'S');
-    
+
 
 
 ////SUBMENU ventas
@@ -125,12 +132,11 @@ void despersistenciaStock(StockIngrediente lista [],int*validos)
 }
 void mostrarStock(StockIngrediente p)
 {
-    printf("[");
     printf("NOMBRE: %s \n",p.nombre_ingrediente);
-    printf("CANRIDAD: %f \n",p.cantidad);
+    printf("CANTIDAD: %f \n",p.cantidad);
     printf("TIPO: %s \n",p.tipo);
-    printf("COSTO: %f \n",p.costo);
-    printf("]\n");
+    printf("COSTO: %.2f\n",p.costo);
+    printf("\n");
 }
 void muestraListaStock(StockIngrediente lista[],int validos)
 {
@@ -167,10 +173,11 @@ void muestraListaDemanda(Preparacion listaDemanda[],int validos)
     for (int i=0;i < validos; i++)
     {
         muestraDemanda(listaDemanda[i]);
+        printf("\n");
     }
 }
 
-void despersistenciaReceta(Receta lista[],int*validosRecetas)
+void despersistenciaReceta(Receta list[],int*validosRecetas)
 {
     FILE* fp;
     int i=0;
@@ -178,7 +185,7 @@ void despersistenciaReceta(Receta lista[],int*validosRecetas)
 
     if(fp!=NULL)
     {
-        while(fread(&lista[i],sizeof(Receta),1,fp)>0)
+        while(fread(&list[i],sizeof(Receta),1,fp)>0)
         {
             i++;
         }
@@ -186,21 +193,23 @@ void despersistenciaReceta(Receta lista[],int*validosRecetas)
     }
 }
 
-void muestraReceta(Receta p)
+void muestraReceta(Receta r)
 {
-    printf("\nNOMBRE: %s \n",p.nombre_preparacion);
-    for(int i=0;i < p.cantIngredientes;i++)
+    printf("RECETA: %s \n",r.nombre_preparacion);
+    printf("\n");
+    for(int i=0;i < r.cantIngredientes;i++)
     {
-        printf("Ingrediente: %s\n",p.ingredientes[i].nombre_ingrediente);
-        printf("Kilos o Litros: %.2f\n",p.ingredientes[i].cantidad);
+        printf("Ingrediente: %s\n",r.ingredientes[i].nombre_ingrediente);
+        printf("Kilos o Litros: %.2f\n",r.ingredientes[i].cantidad);
     }
-    printf("cantidad ingredientes: %i] \n",p.cantIngredientes);
+    printf("cantidad ingredientes: %i \n",r.cantIngredientes);
+    printf("\n");
 }
 
-void muestraListaRecetas(Receta lista[],int validos)
+void muestraListaRecetas(Receta list[],int validosRecetas)
 {
-    for(int i=0;i<validos;i++)
+    for(int i=0;i<validosRecetas;i++)
     {
-        muestraReceta(lista[i]);
+        muestraReceta(list[i]);
     }
 }
