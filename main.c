@@ -9,6 +9,13 @@ char tipo[20]; /// "liquido" "solido"
 float costo; ///costo por kg o por litro según corresponda
 }StockIngrediente;
 
+typedef struct
+{
+    char nombre_preparacion[20];
+    int cantidad;
+}Preparacion;
+
+
 int main()
 {
    
@@ -47,3 +54,34 @@ void muestraListaStock(StockIngrediente lista[],int validos)
         mostrarStock(lista[i]);
     }
 }
+
+void despercistenciaDemanda (Preparacion listaDemanda[],int* validos)
+{
+    FILE* fp;
+    fp = fopen("demanda.bin","rb");
+    int i=0;
+    if (fp != NULL)
+    {
+        while(fread(&listaDemanda[i],sizeof(Preparacion),1,fp) > 0)
+        {
+            i++;
+        }
+        *validos=i;
+        fclose(fp);
+    }
+}
+
+void muestraDemanda(Preparacion P)
+{
+    printf("Producto: %s\n",P.nombre_preparacion);
+    printf("Cantidad: %i\n",P.cantidad);
+}
+
+void muestraListaDemanda(Preparacion listaDemanda[],int validos)
+{
+    for (int i=0;i < validos; i++)
+    {
+        muestraDemanda(listaDemanda[i]);
+    }
+}
+
