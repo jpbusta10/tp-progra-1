@@ -79,6 +79,7 @@ system ("PAUSE");
 system ("cls");
 
 }while (continuar == 's' || continuar == 'S');
+    
 
 
 ////SUBMENU ventas
@@ -153,5 +154,43 @@ void muestraListaDemanda(Preparacion listaDemanda[],int validos)
     {
         muestraDemanda(listaDemanda[i]);
     }
+}
+void despersistenciaReceta(Receta lista[],int*validosRecetas,IngredienteXReceta list[],int*validosIngredientes)
+{
+    FILE* fp;
+    int i=0;
+    int j=0;
+    fp=fopen("recetas.bin","rb");
+
+    if(fp!=NULL)
+    {
+        while(fread(&lista[i],sizeof(Receta),1,fp)>0)
+        {
+            i++;
+        }
+        while(fread(&list[j],sizeof(IngredienteXReceta),1,fp)>0)
+        {
+            j++;
+        }
+        (*validosRecetas)=i;
+        (*validosIngredientes)=j;
+    }
+}
+
+void muestraReceta(Receta p)
+{
+    printf("\n[NOMBRE: %s \n",p.nombre_preparacion);
+    printf("ingredientes: %s \n",p.ingredientes.*(nombre_ingrediente));
+    printf("cantidad ingredientes: %i] \n",p.cantIngredientes);
+
+}
+
+void muestraListaRecetas(Receta lista[],int validos)
+{
+    for(int i=0;i<validos;i++)
+    {
+        muestraReceta(lista[i]);
+    }
+
 }
 
