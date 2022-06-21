@@ -33,7 +33,9 @@ void muestraListaStock(StockIngrediente[],int);
 void despercistenciaDemanda (Preparacion[],int*);
 void muestraDemanda(Preparacion);
 void muestraListaDemanda(Preparacion[],int);
-
+void despersistenciaReceta(Receta[],int*);
+void muestraReceta(Receta);
+void muestraListaRecetas(Receta[],int);
 
 
 
@@ -54,7 +56,7 @@ muestraListaStock(lista,validosStock);
 despercistenciaDemanda (listaDemanda,&validosDemanda);
 muestraDemanda(P);
 muestraListaDemanda(listaDemanda,validosDemanda);
-
+    
 do
 {
 printf ("Ingrese opcion:\n");
@@ -167,11 +169,11 @@ void muestraListaDemanda(Preparacion listaDemanda[],int validos)
         muestraDemanda(listaDemanda[i]);
     }
 }
-void despersistenciaReceta(Receta lista[],int*validosRecetas,IngredienteXReceta list[],int*validosIngredientes)
+
+void despersistenciaReceta(Receta lista[],int*validosRecetas)
 {
     FILE* fp;
     int i=0;
-    int j=0;
     fp=fopen("recetas.bin","rb");
 
     if(fp!=NULL)
@@ -180,21 +182,19 @@ void despersistenciaReceta(Receta lista[],int*validosRecetas,IngredienteXReceta 
         {
             i++;
         }
-        while(fread(&list[j],sizeof(IngredienteXReceta),1,fp)>0)
-        {
-            j++;
-        }
         (*validosRecetas)=i;
-        (*validosIngredientes)=j;
     }
 }
 
 void muestraReceta(Receta p)
 {
-    printf("\n[NOMBRE: %s \n",p.nombre_preparacion);
-    printf("ingredientes: %s \n",p.ingredientes.*(nombre_ingrediente));
+    printf("\nNOMBRE: %s \n",p.nombre_preparacion);
+    for(int i=0;i < p.cantIngredientes;i++)
+    {
+        printf("Ingrediente: %s\n",p.ingredientes[i].nombre_ingrediente);
+        printf("Kilos o Litros: %.2f\n",p.ingredientes[i].cantidad);
+    }
     printf("cantidad ingredientes: %i] \n",p.cantIngredientes);
-
 }
 
 void muestraListaRecetas(Receta lista[],int validos)
@@ -203,6 +203,4 @@ void muestraListaRecetas(Receta lista[],int validos)
     {
         muestraReceta(lista[i]);
     }
-
 }
-
