@@ -14,6 +14,18 @@ typedef struct
     char nombre_preparacion[20];
     int cantidad;
 }Preparacion;
+typedef struct
+{
+char nombre_ingrediente[20];
+float cantidad; ///puede ser en litro o en kg
+}IngredienteXReceta;
+typedef struct
+{
+char nombre_preparacion[20];
+IngredienteXReceta ingredientes[20]; ///Puede tener hasta 20 ingredientes
+int cantIngredientes; ///los validos de ingredientes
+}Receta;
+
 ///prototipados
 void despersistenciaStock(StockIngrediente[],int*);
 void mostrarStock(StockIngrediente);
