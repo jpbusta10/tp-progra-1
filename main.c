@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#define TAM_MAX 100
 typedef struct
 {
 char nombre_ingrediente[20];
