@@ -14,6 +14,15 @@ typedef struct
     char nombre_preparacion[20];
     int cantidad;
 }Preparacion;
+///prototipados
+void despersistenciaStock(StockIngrediente[],int*);
+void mostrarStock(StockIngrediente);
+void muestraListaStock(StockIngrediente[],int);
+void despercistenciaDemanda (Preparacion[],int*);
+void muestraDemanda(Preparacion);
+void muestraListaDemanda(Preparacion[],int);
+
+
 
 
 int main()
