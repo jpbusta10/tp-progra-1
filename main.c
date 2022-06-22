@@ -228,7 +228,7 @@ int busquedaReceta(Receta lista[],int validosReceta,char nombrePreparacion[])//r
     {
         if(strcmp(lista[i].nombre_preparacion,nombrePreparacion)==0)
         {
-            busqueda=i
+            busqueda=i;
         }
     }
     return busqueda;
