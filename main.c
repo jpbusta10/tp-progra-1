@@ -39,12 +39,6 @@ void muestraReceta(Receta);
 void muestraListaRecetas(Receta[],int);
 int busquedaReceta(Receta[],int,char[]);
 
-void cargarPreciosPreparados (FILE*,PrecioPreparacion[],int,Receta[]);
-void modificarPrecioPreparado (FILE*,PrecioPreparacion[],int,Receta[]);
-void ingresarNuevaVenta (PedidoPreparacion[]);
-//void descontarStockPreparados (PedidoPreparacion[]);/// necesito "stock preparados"
-//void devolucionVenta ();///se agrega baja en struct venta
-
 
 
 int main()
@@ -60,10 +54,6 @@ Preparacion listaDemanda [TAM_MAX];
 Preparacion P;
 Receta list[TAM_MAX];
 Receta r;
-PrecioPreparacion preciosPrep [TAM_MAX];
-PrecioPreparacion precioP;
-PedidoPreparacion pedidoPrep [TAM_MAX];
-PedidoPreparacion pP;
 
 despersistenciaStock(lista,&validosStock);
 mostrarStock(p);
@@ -114,140 +104,15 @@ system ("cls");
 
 
 
-//SUBMENU ventas
-
-cargarPreciosPreparados (parch,preciosPrep,validosRecetas,list);
-
-printf ("VENTAS:\n");
-printf ("\n");
-printf ("Ingrese la operacion que desea realizar:\n");
-printf ("1. Modificar precio de preparado\n");
-printf ("2. Ingresar una nueva venta\n");
-printf ("3. Devolucion de venta\n");
-
-
-do
-{
-printf ("Ingrese opcion:\n");
-printf ("1. Modificar precio de preparado\n");
-printf ("2. Ingresar una nueva venta\n");
-printf ("3. Devolucion de venta\n");
-
-scanf ("%i",&opcion);
-
-    switch (opcion)
-    {
-    case 1:
-        modificarPrecioPreparado (parch,preciosPrep,validosRecetas,list);
-        break;
-    case 2:
-        ingresarNuevaVenta (pedidoPrep);
-        descontarStockPreparados (pedidoPrep,)/// necesito "stock preparados"
-        break;
-    case 3:
-        devolucionVenta ();///se agrega baja en struct venta
-        break;
-    default:
-        printf ("La opcion ingresada no existe\n");
-        break;
-    }
-
-printf("Desea continuar?\n");
-fflush(stdin);
-scanf("%c",&control);
-
-system ("PAUSE");
-system ("cls");
-
-}while (control == 's' || continuar == 'S');
+////SUBMENU ventas
+//printf ("Ingrese la operacion que desea realizar:\n");
+////Cargar los precios de los preparados
+//printf ("1. Modificar precio de preparado\n");
+//printf ("2. Ingresar una nueva venta\n");
+//printf ("3. Devolucion de venta\n");
 
 
     return 0;
-}
-
-//void devolucionVenta
-
-void ingresarNuevaVenta (PedidoPreparacion pedidoPrep[])
-{
-    FILE* pa;
-    char nombre [TAM_MAX];
-    int i=0;
-    char cont;
-    int cantidad;
-    pa=fopen("ventas.bin","ab");
-        if (pa!=NULL)
-        {
-            do
-            {
-                printf("Ingresar preparacion a vender: \n");
-                fflush(stdin);
-                gets (nombre);
-                strcpy (pedidoPrep[i].nombre_preparacion,nombre);
-                fwrite (&pedidoPrep[i].nombre_preparacion,sizeof(char),1,pa);
-                printf("Ingrese la cantidad a vender: \n");
-                fflush(stdin);
-                scanf("%i",&cantidad);
-                pedidoPrep[i].cantidad=cantidad;
-                fwrite(&pedidoPrep[i].cantidad,sizeof(int),1,pa);
-                printf("Desea continuar? s/n \n");
-                fflush(stdin);
-                scanf("%c",&cont);
-            }while (cont=='s' || cont=='S');
-
-
-        }
-}
-
-void modificarPrecioPreparado (FILE* parch,PrecioPreparacion preciosPrep[],int validosRecetas,Receta list[])
-{
-  parch=fopen ("precios.bin","r+b");
-  char nombre [TAM_MAX];
-  float precio;
-    if (parch!=NULL)
-    {
-        printf("Ingrese el nombre de la preparacion que desea cambiar el precio\n");
-        fflush(stdin);
-        gets(nombre);
-        for (int i=0;i<validosRecetas;i++)
-       {
-           if (fread(list[i].nombre_preparacion,sizeof(char),1,parch)>0);//sizeof????
-           if (strcmp(nombre,list[i].nombre_preparacion)==0)
-           {
-             printf("Ingrese el precio de: %s",list[i].nombre_preparacion);
-             printf("\n");
-             fflush(stdin);
-             scanf("%f",&precio);
-            preciosPrep[i].precio_venta=precio;
-            fwrite(&preciosPrep[i].precio_venta,sizeof(float),1,parch);
-           }
-        }
-    }
-fclose (parch);
-}
-
-void cargarPreciosPreparados (FILE* parch,PrecioPreparacion preciosPrep[],int validosRecetas,Receta list[])
-{
-parch=fopen ("precios.bin","wb");
-float precio;
-    if (parch!=NULL)
-    {
-        for (int i=0;i<validosRecetas;i++)
-       {
-        strcpy (preciosPrep[i].nombre_preparacion,list[i].nombre_preparacion);
-        fwrite(preciosPrep[i].nombre_preparacion,sizeof(list[i].nombre_preparacion),1,parch);
-        printf("Ingrese el precio de: %s",list[i].nombre_preparacion);
-        printf("\n");
-        fflush(stdin);
-        scanf("%f",&precio);
-        preciosPrep[i].precio_venta=precio;
-        fwrite(&preciosPrep[i].precio_venta,sizeof(float),1,parch);
-       }
-    }
-  else
-  {
-      printf("Error al ingresar los datos \n");
-  }
-fclose (parch);
 }
 
 void despersistenciaStock(StockIngrediente lista [],int*validos)
@@ -367,4 +232,47 @@ int busquedaReceta(Receta lista[],int validosReceta,char nombrePreparacion[])//r
         }
     }
     return busqueda;
+}
+void preparar(Receta lista[],StockIngrediente stock[],int validosStock,int validosReceta)
+{
+    FILE*fp;
+    Preparacion p;
+    int indice=0;
+    int validosDemanda=0;
+    int i=0;
+    int k=0;
+    int indiceStock=0;
+    fp=fopen("demanda.bin","rb");
+    if(fp!=NULL)
+    {
+        fseek(fp,0,SEEK_END);
+        validosDemanda = ftell(fp)/sizeof(Preparacion);
+        fseek(fp,0,SEEK_SET);
+        while(k<validosDemanda)///iteramos hasta que se termine el archivo
+        {
+        fread(&p,sizeof(Preparacion),1,fp);
+        indice=busquedaReceta(lista,validosReceta,p.nombre_preparacion); ///buscamos el indice en la receta
+        while(i<lista[indice].cantIngredientes) ///siclo while para iterar los ingredientes
+        {
+            indiceStock=busquedaStock(stock,validosStock,lista[indice].ingredientes[i].nombre_ingrediente); /// buscamos el indice en el stock
+            stock[indiceStock].cantidad=(stock[indiceStock].cantidad)-(p.cantidad)*(lista[indice].ingredientes[i].cantidad); /// cambiamos el stock
+            i++;
+        }
+        k++;
+        }
+    }
+    fclose(fp);
+
+}
+int busquedaStock(StockIngrediente stock[],int validosStock,char ingrediente[])
+{
+    int indice=0;
+    for(int i;i<validosStock;i++)
+    {
+        if(strcmp(stock[i].nombre_ingrediente,ingrediente)==0)
+        {
+            indice=i;
+        }
+    }
+    return indice;
 }
