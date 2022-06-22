@@ -346,3 +346,88 @@ int busquedaStock(StockIngrediente stock[],int validosStock,char ingrediente[])
     }
     return indice;
 }
+
+//void devolucionVenta
+
+void ingresarNuevaVenta (PedidoPreparacion pedidoPrep[])
+{
+    FILE* pa;
+    char nombre [TAM_MAX];
+    int i=0;
+    char cont;
+    int cantidad;
+    pa=fopen("ventas.bin","ab");
+        if (pa!=NULL)
+        {
+            do
+            {
+                printf("Ingresar preparacion a vender: \n");
+                fflush(stdin);
+                gets (nombre);
+                strcpy (pedidoPrep[i].nombre_preparacion,nombre);
+                fwrite (&pedidoPrep[i].nombre_preparacion,sizeof(char),1,pa);
+                printf("Ingrese la cantidad a vender: \n");
+                fflush(stdin);
+                scanf("%i",&cantidad);
+                pedidoPrep[i].cantidad=cantidad;
+                fwrite(&pedidoPrep[i].cantidad,sizeof(int),1,pa);
+                printf("Desea continuar? s/n \n");
+                fflush(stdin);
+                scanf("%c",&cont);
+            }while (cont=='s' || cont=='S');
+
+
+        }
+}
+
+void modificarPrecioPreparado (FILE* parch,PrecioPreparacion preciosPrep[],int validosRecetas,Receta list[])
+{
+  parch=fopen ("precios.bin","r+b");
+  char nombre [TAM_MAX];
+  float precio;
+    if (parch!=NULL)
+    {
+        printf("Ingrese el nombre de la preparacion que desea cambiar el precio\n");
+        fflush(stdin);
+        gets(nombre);
+        for (int i=0;i<validosRecetas;i++)
+       {
+           if (fread(list[i].nombre_preparacion,sizeof(char),1,parch)>0);//sizeof????
+           if (strcmp(nombre,list[i].nombre_preparacion)==0)
+           {
+             printf("Ingrese el precio de: %s",list[i].nombre_preparacion);
+             printf("\n");
+             fflush(stdin);
+             scanf("%f",&precio);
+            preciosPrep[i].precio_venta=precio;
+            fwrite(&preciosPrep[i].precio_venta,sizeof(float),1,parch);
+           }
+        }
+    }
+fclose (parch);
+}
+
+void cargarPreciosPreparados (FILE* parch,PrecioPreparacion preciosPrep[],int validosRecetas,Receta list[])
+{
+parch=fopen ("precios.bin","wb");
+float precio;
+    if (parch!=NULL)
+    {
+        for (int i=0;i<validosRecetas;i++)
+       {
+        strcpy (preciosPrep[i].nombre_preparacion,list[i].nombre_preparacion);
+        fwrite(preciosPrep[i].nombre_preparacion,sizeof(list[i].nombre_preparacion),1,parch);
+        printf("Ingrese el precio de: %s",list[i].nombre_preparacion);
+        printf("\n");
+        fflush(stdin);
+        scanf("%f",&precio);
+        preciosPrep[i].precio_venta=precio;
+        fwrite(&preciosPrep[i].precio_venta,sizeof(float),1,parch);
+       }
+    }
+  else
+  {
+      printf("Error al ingresar los datos \n");
+  }
+fclose (parch);
+}
