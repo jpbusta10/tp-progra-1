@@ -81,6 +81,10 @@ Preparacion listaDemanda [TAM_MAX];
 Preparacion P;
 Receta list[TAM_MAX];
 Receta r;
+PrecioPreparacion preciosPrep [TAM_MAX];
+PrecioPreparacion precioP;
+PedidoPreparacion pedidoPrep [TAM_MAX];
+PedidoPreparacion pP;
 
 despersistenciaStock(lista,&validosStock);
 mostrarStock(p);
@@ -130,13 +134,52 @@ system ("cls");
 }while (continuar == 's' || continuar == 'S');
 
 
+//SUBMENU ventas
 
-////SUBMENU ventas
-//printf ("Ingrese la operacion que desea realizar:\n");
-////Cargar los precios de los preparados
-//printf ("1. Modificar precio de preparado\n");
-//printf ("2. Ingresar una nueva venta\n");
-//printf ("3. Devolucion de venta\n");
+cargarPreciosPreparados (parch,preciosPrep,validosRecetas,list);
+
+printf ("VENTAS:\n");
+printf ("\n");
+printf ("Ingrese la operacion que desea realizar:\n");
+printf ("1. Modificar precio de preparado\n");
+printf ("2. Ingresar una nueva venta\n");
+printf ("3. Devolucion de venta\n");
+
+
+do
+{
+printf ("Ingrese opcion:\n");
+printf ("1. Modificar precio de preparado\n");
+printf ("2. Ingresar una nueva venta\n");
+printf ("3. Devolucion de venta\n");
+
+scanf ("%i",&opcion);
+
+    switch (opcion)
+    {
+    case 1:
+        modificarPrecioPreparado (parch,preciosPrep,validosRecetas,list);
+        break;
+    case 2:
+        ingresarNuevaVenta (pedidoPrep);
+        descontarStockPreparados (pedidoPrep,)/// necesito "stock preparados"
+        break;
+    case 3:
+        devolucionVenta ();///se agrega baja en struct venta
+        break;
+    default:
+        printf ("La opcion ingresada no existe\n");
+        break;
+    }
+
+printf("Desea continuar?\n");
+fflush(stdin);
+scanf("%c",&control);
+
+system ("PAUSE");
+system ("cls");
+
+}while (control == 's' || continuar == 'S');
 
 
     return 0;
