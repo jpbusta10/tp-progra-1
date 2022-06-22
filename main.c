@@ -132,9 +132,16 @@ void despersistenciaStock(StockIngrediente lista [],int*validos)
 }
 void mostrarStock(StockIngrediente p)
 {
+    char string [] = "liquido";
     printf("NOMBRE: %s \n",p.nombre_ingrediente);
-    printf("CANTIDAD: %f \n",p.cantidad);
-    printf("TIPO: %s \n",p.tipo);
+    if(strcmp(p.tipo,string)==0)
+    {
+        printf("Cantidad: %.2f litros \n",p.cantidad);
+    }
+    else
+    {
+        printf("cantidad: %.2f kilos \n",p.cantidad);
+    }
     printf("COSTO: %.2f\n",p.costo);
     printf("\n");
 }
