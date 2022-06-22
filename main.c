@@ -59,6 +59,8 @@ void despersistenciaReceta(Receta[],int*);
 void muestraReceta(Receta);
 void muestraListaRecetas(Receta[],int);
 int busquedaReceta(Receta[],int,char[]);
+int busquedaStock(StockIngrediente[],int,char[]);
+void preparacion(Receta[],int, StockIngrediente[],int);
 void cargarPreciosPreparados (FILE*,PrecioPreparacion[],int,Receta[]);
 void modificarPrecioPreparado (FILE*,PrecioPreparacion[],int,Receta[]);
 void ingresarNuevaVenta (PedidoPreparacion[]);
@@ -303,41 +305,42 @@ int busquedaReceta(Receta lista[],int validosReceta,char nombrePreparacion[])//r
     }
     return busqueda;
 }
-void preparar(Receta lista[],StockIngrediente stock[],int validosStock,int validosReceta)
+void preparacion(Receta recetas[],int validosRecetas, StockIngrediente stock[],int validosStock)
 {
-    FILE*fp;
-    Preparacion p;
-    int indice=0;
+    FILE* fp;
     int validosDemanda=0;
-    int k=0;
-    int indiceStock=0;
+    Preparacion p;
+    int indice=0;///indice recetas
+    int indicS=0;//indice stock
+    char ingrediente [TAM_MAX];
     fp=fopen("demanda.bin","rb");
     if(fp!=NULL)
     {
         fseek(fp,0,SEEK_END);
-        validosDemanda = ftell(fp)/sizeof(Preparacion);
+        validosDemanda=ftell(fp)/sizeof(Preparacion);
         fseek(fp,0,SEEK_SET);
-        while(k<validosDemanda)///iteramos hasta que se termine el archivo
+        for(int i=0;i<validosDemanda;i++)
         {
-        fread(&p,sizeof(Preparacion),1,fp);
-        indice=busquedaReceta(lista,validosReceta,p.nombre_preparacion); ///buscamos el indice en la receta
-        int i=0;
-        while(i<lista[indice].cantIngredientes) ///siclo while para iterar los ingredientes
-        {
-            indiceStock=busquedaStock(stock,validosStock,lista[indice].ingredientes[i].nombre_ingrediente); /// buscamos el indice en el stock
-            stock[indiceStock].cantidad=(stock[indiceStock].cantidad)-(p.cantidad)*(lista[indice].ingredientes[i].cantidad); /// cambiamos el stock
-            i++;
-        }
-        k++;
+            fread(&p,sizeof(Preparacion),1,fp);
+            indice=busquedaReceta(recetas,validosRecetas,p.nombre_preparacion);
+            //printf("indice: %i  nombre: %s \n",indice,p.nombre_preparacion);
+            for(int j=0;j<recetas[indice].cantIngredientes;j++)
+            {
+                strcpy(ingrediente,recetas[indice].ingredientes[j].nombre_ingrediente);
+                indicS=busquedaStock(stock,validosStock,ingrediente);
+                //printf("indice stock:%i ingrediente:%s\n",indicS,ingrediente);
+                stock[indicS].cantidad=stock[indicS].cantidad-(p.cantidad)*(recetas[indice].ingredientes[j].cantidad);
+
+            }
+
         }
     }
     fclose(fp);
-
 }
 int busquedaStock(StockIngrediente stock[],int validosStock,char ingrediente[])
 {
     int indice=0;
-    for(int i;i<validosStock;i++)
+    for(int i=0;i<validosStock;i++)
     {
         if(strcmp(stock[i].nombre_ingrediente,ingrediente)==0)
         {
