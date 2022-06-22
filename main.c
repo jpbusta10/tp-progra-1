@@ -312,6 +312,8 @@ void preparacion(Receta recetas[],int validosRecetas, StockIngrediente stock[],i
     Preparacion p;
     int indice=0;///indice recetas
     int indicS=0;//indice stock
+    float aModificar=0;
+
     char ingrediente [TAM_MAX];
     fp=fopen("demanda.bin","rb");
     if(fp!=NULL)
@@ -319,18 +321,21 @@ void preparacion(Receta recetas[],int validosRecetas, StockIngrediente stock[],i
         fseek(fp,0,SEEK_END);
         validosDemanda=ftell(fp)/sizeof(Preparacion);
         fseek(fp,0,SEEK_SET);
-        for(int i=0;i<validosDemanda;i++)
+        for(int i=0; i<validosDemanda; i++)
         {
             fread(&p,sizeof(Preparacion),1,fp);
             indice=busquedaReceta(recetas,validosRecetas,p.nombre_preparacion);
             //printf("indice: %i  nombre: %s \n",indice,p.nombre_preparacion);
-            for(int j=0;j<recetas[indice].cantIngredientes;j++)
+            for(int j=0; j<recetas[indice].cantIngredientes; j++)
             {
                 strcpy(ingrediente,recetas[indice].ingredientes[j].nombre_ingrediente);
                 indicS=busquedaStock(stock,validosStock,ingrediente);
                 //printf("indice stock:%i ingrediente:%s\n",indicS,ingrediente);
-                stock[indicS].cantidad=stock[indicS].cantidad-(p.cantidad)*(recetas[indice].ingredientes[j].cantidad);
-
+                aModificar=(p.cantidad)*(recetas[indice].ingredientes[j].cantidad);///meto todo en una variable para hacelo mas facil de leer
+                if(stock[indicS].cantidad>=aModificar)
+                {
+                    stock[indicS].cantidad=stock[indicS].cantidad-aModificar;
+                }
             }
 
         }
