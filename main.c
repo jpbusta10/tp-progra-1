@@ -309,7 +309,6 @@ void preparar(Receta lista[],StockIngrediente stock[],int validosStock,int valid
     Preparacion p;
     int indice=0;
     int validosDemanda=0;
-    int i=0;
     int k=0;
     int indiceStock=0;
     fp=fopen("demanda.bin","rb");
@@ -322,6 +321,7 @@ void preparar(Receta lista[],StockIngrediente stock[],int validosStock,int valid
         {
         fread(&p,sizeof(Preparacion),1,fp);
         indice=busquedaReceta(lista,validosReceta,p.nombre_preparacion); ///buscamos el indice en la receta
+        int i=0;
         while(i<lista[indice].cantIngredientes) ///siclo while para iterar los ingredientes
         {
             indiceStock=busquedaStock(stock,validosStock,lista[indice].ingredientes[i].nombre_ingrediente); /// buscamos el indice en el stock
