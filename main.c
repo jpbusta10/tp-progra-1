@@ -27,6 +27,27 @@ IngredienteXReceta ingredientes[20]; ///Puede tener hasta 20 ingredientes
 int cantIngredientes; ///los validos de ingredientes
 }Receta;
 
+typedef struct
+{
+char nombre_preparacion[20];
+float precio_venta; ///precio por unidad
+}PrecioPreparacion;
+
+typedef struct
+{
+char nombre_preparacion[20];
+int cantidad;
+}PedidoPreparacion;
+
+typedef struct
+{
+int idVenta;
+PedidoPreparacion items_pedido[20]; ///puedo pedir hasta 20 items
+int cantItems; ///los validos del arreglo de items_pedido
+float valor_total; ///valor total a pagar
+int baja;
+}Venta;
+
 ///prototipados
 void despersistenciaStock(StockIngrediente[],int*);
 void mostrarStock(StockIngrediente);
