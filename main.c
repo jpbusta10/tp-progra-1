@@ -37,6 +37,7 @@ void muestraListaDemanda(Preparacion[],int);
 void despersistenciaReceta(Receta[],int*);
 void muestraReceta(Receta);
 void muestraListaRecetas(Receta[],int);
+int busquedaReceta(Receta[],int,char[]);
 
 
 
@@ -219,4 +220,16 @@ void muestraListaRecetas(Receta list[],int validosRecetas)
     {
         muestraReceta(list[i]);
     }
+}
+int busquedaReceta(Receta lista[],int validosReceta,char nombrePreparacion[])//retorna el indice de la receta a buscar por el nombre 
+{
+    int busqueda=0;
+    for(int i=0;i<validosReceta;i++)
+    {
+        if(strcmp(lista[i].nombre_preparacion,nombrePreparacion)==0)
+        {
+            busqueda=i
+        }
+    }
+    return busqueda;
 }
