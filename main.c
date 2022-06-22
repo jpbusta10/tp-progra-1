@@ -59,6 +59,12 @@ void despersistenciaReceta(Receta[],int*);
 void muestraReceta(Receta);
 void muestraListaRecetas(Receta[],int);
 int busquedaReceta(Receta[],int,char[]);
+void cargarPreciosPreparados (FILE*,PrecioPreparacion[],int,Receta[]);
+void modificarPrecioPreparado (FILE*,PrecioPreparacion[],int,Receta[]);
+void ingresarNuevaVenta (PedidoPreparacion[]);
+//void descontarStockPreparados (PedidoPreparacion[]);/// necesito "stock preparados"
+//void devolucionVenta ();///se agrega baja en struct venta
+
 
 
 
