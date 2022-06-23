@@ -531,4 +531,3 @@ void preparar(Receta recetas[],int validosRecetas, StockIngrediente stock[],int 
     }
     fclose(fp);
 }
-
