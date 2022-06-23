@@ -73,6 +73,7 @@ void ingresarNuevaVenta (PedidoPreparacion[]);
 
 int main()
 {
+FILE* parch;
 int opcion;
 char continuar;
 int validosStock;
