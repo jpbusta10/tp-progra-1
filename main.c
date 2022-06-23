@@ -139,39 +139,39 @@ system ("cls");
 }while (continuar == 's' || continuar == 'S');
 
 
-//SUBMENU ventas
+//SUBMENU VENTAS
 
-cargarPreciosPreparados (parch,preciosPrep,validosRecetas,list);
-
-printf ("VENTAS:\n");
-printf ("\n");
-printf ("Ingrese la operacion que desea realizar:\n");
-printf ("1. Modificar precio de preparado\n");
-printf ("2. Ingresar una nueva venta\n");
-printf ("3. Devolucion de venta\n");
-
+system ("PAUSE");
+system ("cls");
 
 do
 {
-printf ("Ingrese opcion:\n");
-printf ("1. Modificar precio de preparado\n");
-printf ("2. Ingresar una nueva venta\n");
-printf ("3. Devolucion de venta\n");
+printf ("VENTAS:\n");
+printf ("\n");
+printf ("Ingrese la operacion que desea realizar:\n");
+printf ("1. Cargar precios preparados\n");
+printf ("2. Modificar precio de preparado\n");
+printf ("3. Ingresar una nueva venta\n");
+printf ("4. Devolucion de venta\n");
 
 scanf ("%i",&opcion);
 
     switch (opcion)
     {
     case 1:
-        modificarPrecioPreparado (parch,preciosPrep,validosRecetas,list);
+
+        cargarPreciosPreparados (parch,preciosPrep,validosRecetas,list);
         break;
     case 2:
-        ingresarNuevaVenta (pedidoPrep);
-        descontarStockPreparados (pedidoPrep,)/// necesito "stock preparados"
+        modificarPrecioPreparado (parch,preciosPrep,validosRecetas,list);
         break;
-    case 3:
-        devolucionVenta ();///se agrega baja en struct venta
-        break;
+//    case 3:
+//        ingresarNuevaVenta (pedidoPrep);
+//        descontarStockPreparados (pedidoPrep,)/// necesito "stock preparados"
+//        break;
+//    case 4:
+//        devolucionVenta ();///se agrega baja en struct venta
+//        break;
     default:
         printf ("La opcion ingresada no existe\n");
         break;
@@ -185,6 +185,7 @@ system ("PAUSE");
 system ("cls");
 
 }while (control == 's' || continuar == 'S');
+
 
 
     return 0;
