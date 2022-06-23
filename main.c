@@ -159,7 +159,8 @@ printf ("1. Cargar precios preparados\n");
 printf ("2. Mostrar lista precios\n");
 printf ("3. Modificar precio de preparado\n");
 printf ("4. Ingresar una nueva venta\n");
-printf ("5. Devolucion de venta\n");
+printf ("5. Mostrar ventas\n");
+printf ("6. Devolucion de venta\n");
 
 scanf ("%i",&opcion);
 
@@ -176,11 +177,16 @@ scanf ("%i",&opcion);
     case 3:
         modificarPrecioPreparado (parch,preciosPrep,validosRecetas,list);
         break;
-//    case 4:
-//        ingresarNuevaVenta (pedidoPrep,&cantVentas);
+    case 4:
+        ingresarNuevaVenta (pedidoPrep,&cantVentas,%validosId);
 //        descontarStockPreparados (pedidoPrep,)/// necesito "stock preparados"
-//        break;
+//        depersistenciaVentas (ventaLista,cantVentas);
+        break;
 //    case 5:
+//        mostrarVenta (v);
+//        mostrarListaVentas (ventaLista,cantVentas);
+//        break;
+//    case 6:
 //        devolucionVenta ();///se agrega baja en struct venta
 //        break;
     default:
@@ -196,7 +202,6 @@ system ("PAUSE");
 system ("cls");
 
 }while (control == 's' || continuar == 'S');
-
 
     return 0;
 }
