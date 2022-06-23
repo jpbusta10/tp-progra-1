@@ -76,6 +76,7 @@ int main()
 FILE* parch;
 int opcion;
 char continuar;
+char control;
 int validosStock;
 int validosDemanda;
 int validosRecetas;
