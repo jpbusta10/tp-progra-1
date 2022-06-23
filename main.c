@@ -151,6 +151,7 @@ system ("cls");
 }while (continuar == 's' || continuar == 'S');
 
 
+
 //SUBMENU VENTAS
 
 system ("PAUSE");
@@ -184,17 +185,16 @@ scanf ("%i",&opcion);
         modificarPrecioPreparado (parch,preciosPrep,validosRecetas,list);
         break;
     case 4:
-        ingresarNuevaVenta (pedidoPrep,&validosId);
+        ingresarNuevaVenta (pedidoPrep,&validosId,&item);
 //        descontarStockPreparados (pedidoPrep,)/// necesito "stock preparados"
-        depersistenciaVentas (ventaLista,cantVentas,validosId);
+        depersistenciaVentas (ventaLista,pedidoPrep,validosId,item,preciosPrep,validosRecetas);
         break;
-//    case 5:
-//        mostrarVenta (v);
-//        mostrarListaVentas (ventaLista,cantVentas);
-//        break;
-//    case 6:
-//        devolucionVenta ();///se agrega baja en struct venta
-//        break;
+    case 5:
+        mostrarListaVentas (ventaLista,validosId);
+        break;
+    case 6:
+        devolucionVenta (ventaLista,validosId);
+        break;
     default:
         printf ("La opcion ingresada no existe\n");
         break;
