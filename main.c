@@ -83,6 +83,7 @@ int validosStock;
 int validosDemanda;
 int validosRecetas;
 int cantVentas;
+int validosId;
 StockIngrediente lista [TAM_MAX];
 StockIngrediente p;
 Preparacion listaDemanda [TAM_MAX];
