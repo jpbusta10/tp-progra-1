@@ -66,7 +66,7 @@ void cargarPreciosPreparados (FILE*,PrecioPreparacion[],int,Receta[]);
 void mostrarPrecios(PrecioPreparacion);
 void muestraListaPrecios(PrecioPreparacion[],int);
 void modificarPrecioPreparado (FILE*,PrecioPreparacion[],int,Receta[]);
-void ingresarNuevaVenta (PedidoPreparacion[]);
+void ingresarNuevaVenta (PedidoPreparacion[],int*);
 //void descontarStockPreparados (PedidoPreparacion[]);/// necesito "stock preparados"
 //void devolucionVenta ();///se agrega baja en struct venta
 
@@ -82,6 +82,7 @@ char control;
 int validosStock;
 int validosDemanda;
 int validosRecetas;
+int cantVentas;
 StockIngrediente lista [TAM_MAX];
 StockIngrediente p;
 Preparacion listaDemanda [TAM_MAX];
@@ -92,6 +93,8 @@ PrecioPreparacion preciosPrep [TAM_MAX];
 PrecioPreparacion precioP;
 PedidoPreparacion pedidoPrep [TAM_MAX];
 PedidoPreparacion pP;
+Venta ventaLista [TAM_MAX];
+Venta v;
 
 despersistenciaStock(lista,&validosStock);
 mostrarStock(p);
@@ -173,7 +176,7 @@ scanf ("%i",&opcion);
         modificarPrecioPreparado (parch,preciosPrep,validosRecetas,list);
         break;
 //    case 4:
-//        ingresarNuevaVenta (pedidoPrep);
+//        ingresarNuevaVenta (pedidoPrep,&cantVentas);
 //        descontarStockPreparados (pedidoPrep,)/// necesito "stock preparados"
 //        break;
 //    case 5:
@@ -431,7 +434,7 @@ void muestraListaPrecios(PrecioPreparacion preciosPrep[],int validosRecetas)
     }
 }
 
-void ingresarNuevaVenta (PedidoPreparacion pedidoPrep[])
+void ingresarNuevaVenta (PedidoPreparacion pedidoPrep[],int* cantVentas)
 {
     FILE* pa;
     char nombre [TAM_MAX];
@@ -453,6 +456,7 @@ void ingresarNuevaVenta (PedidoPreparacion pedidoPrep[])
                 scanf("%i",&cantidad);
                 pedidoPrep[i].cantidad=cantidad;
                 fwrite(&pedidoPrep[i].cantidad,sizeof(int),1,pa);
+                (*cantVentas)+=cantidad;
                 printf("Desea continuar? s/n \n");
                 fflush(stdin);
                 scanf("%c",&cont);
