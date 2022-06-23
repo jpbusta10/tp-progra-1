@@ -483,36 +483,30 @@ void muestraListaPrecios(PrecioPreparacion preciosPrep[],int validosRecetas)
     }
 }
 
-void ingresarNuevaVenta (PedidoPreparacion pedidoPrep[],int* cantVentas,int* validosId)
+
+void ingresarNuevaVenta (PedidoPreparacion pedidoPrep[],int* validosId,int* item)
 {
-    FILE* pa;
     char nombre [TAM_MAX];
-    int i=0;
     char cont;
     int cantidad;
-    pa=fopen("ventas.bin","ab");
-        if (pa!=NULL)
-        {
+
             do
             {
                 printf("Ingresar preparacion a vender: \n");
                 fflush(stdin);
                 gets (nombre);
-                strcpy (pedidoPrep[i].nombre_preparacion,nombre);
-                fwrite (&pedidoPrep[i].nombre_preparacion,sizeof(char),1,pa);
+                strcpy (pedidoPrep[item].nombre_preparacion,nombre);
                 printf("Ingrese la cantidad a vender: \n");
                 fflush(stdin);
                 scanf("%i",&cantidad);
-                pedidoPrep[i].cantidad=cantidad;
-                fwrite(&pedidoPrep[i].cantidad,sizeof(int),1,pa);
-                (*cantVentas)+=cantidad;
+                pedidoPrep[item].cantidad=cantidad;
+                item++;
                 printf("Desea continuar? s/n \n");
                 fflush(stdin);
                 scanf("%c",&cont);
-            }while (cont=='s' || cont=='S');
-    (*validosId)=i;
-    i++;
-        }
+            }while (cont=='s' || cont=='S' && item<=20);
+    (*validosId)++;
+}
         else
         {
             printf("Error-no se pudo abrir el archivo ventas.bin\n");
@@ -520,11 +514,111 @@ void ingresarNuevaVenta (PedidoPreparacion pedidoPrep[],int* cantVentas,int* val
 
         fclose(pa);
 }
-//void descontarStockPreparados (pedidoPrep,)/// necesito "stock preparados",se puede quedar sin stock
-//void devolucionVenta//agregar baja venta
-/**El usuario se puede arrepentir de una compra, por lo tanto deberíamos poder
-eliminar una venta generada (búsqueda por idVenta), esto implica que en el archivo
-de ventas se pueda hacer una “baja lógica”, por lo tanto debería agregar un campo
-en la estructura de Venta.**/
+
+
+void depersistenciaVentas (Venta ventaLista[],PedidoPreparacion pedidoPrep[],int validosId,int item,PrecioPreparacion preciosPrep[],int validosRecetas)
+{
+    FILE* pa;
+    char identificacion [TAM_MAX];
+    char cont;
+    int cantidad;
+    float valorTotal;
+    int altaVenta=1;
+    pa=fopen("ventas.bin","ab");
+        if (pa!=NULL)
+        {
+            do
+            {
+                printf("Ingresar identificacion del comprador: \n");
+                fflush(stdin);
+                gets (nombre);
+                strcpy (ventaLista[validosId].idVenta,nombre);
+                fwrite (&ventaLista[validosId].idVenta,sizeof(char),1,pa);
+
+                strcpy (ventaLista.items_pedido[validosId].nombre_preparacion,pedidoPrep[validosId].nombre_preparacion);
+                fwrite (&ventaLista.items_pedido[validosId].nombre_preparacion,sizeof(char),1,pa);
+
+                ventaLista.items_pedido[validosId].cantidad=pedidoPrep[validosId].cantidad;
+                fwrite (&ventaLista.items_pedido[validosId].cantidad,sizeof(int),1,pa);
+
+                ventaLista[validosId].cantItems=item;
+                fwrite (&ventaLista[validosId].cantItems,sizeof(int),1,pa);
+
+                valorTotal=costoTotalVenta (pedidoPrep,validosId,item,preciosPrep,validosRecetas);
+                ventaLista[validosId].valor_total=valorTotal;
+                fwrite (&ventaLista[validosId].valor_total,sizeof(float),1,pa);
+
+                ventaLista[validosId].baja=altaVenta;
+                fwrite (&ventaLista[validosId].baja,sizeof(int),1,pa);
+
+                printf("Desea continuar? s/n \n");
+                fflush(stdin);
+                scanf("%c",&cont);
+            }while (cont=='s' || cont=='S');
+
+
+        }
+}
+
+float costoTotalVenta (PedidoPreparacion pedidoPrep[],int validosId,int item,PrecioPreparacion preciosPrep[],int validosRecetas)
+{
+    float valor=0;
+    int j=0;
+
+        do
+        {
+            for (int i=0;i<validosRecetas;i++)
+            {
+                if (strcmpi(pedidoPrep[item].nombre_preparacion,preciosPrep[i].nombre_preparacion)==0)
+                {
+                    valor+=(preciosPrep[i].precio_venta)*(pedidoPrep[item].cantidad);
+                    j++;
+                }
+            }
+
+        }while (j<item);
+
+    return valor;
+}
+
+void mostrarVenta (Venta v,int item)
+{
+    printf("Id Venta: %s\n",v.idVenta);
+    for (int i=0;i<item;i++)
+    {
+      printf("Pedido: -Preparacion: %s     -Cantidad: %i \n",v.items_pedido[i].nombre_preparacion,v.items_pedido[i].cantidad);
+    }
+    printf("Cantidad items: %i\n",v.cantItems);
+    printf("Valor total venta: %f\n",v.valor_total);
+}
+
+void mostrarListaVentas (Venta ventaLista[],int validosId)
+{
+    for(int i=0;i<validosId;i++)
+    {
+        mostrarVenta(ventaLista[i]);
+    }
+}
+
+void devolucionVenta (Venta ventaLista[],int validosId)
+{
+char Id [TAM_MAX];
+    printf("Ingrese el Id de la venta que quiere dar de baja\n");
+    gets(Id);
+        for (int i=0;i<validosId;i++)
+        {
+            if (strcmpi(Id,ventaLista[i].idVenta)==0)
+            {
+                ventaLista[i].baja=0;
+                printf("Se ha dado de baja la venta\n");
+            }
+        }
+
+}
+
+
+//void descontarStockPreparados (pedidoPrep,)/// necesito "stockventa", stock de preaprados para la venta,se puede quedar sin stock
+
+
 
 
