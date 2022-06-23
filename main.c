@@ -318,7 +318,7 @@ int busquedaReceta(Receta lista[],int validosReceta,char nombrePreparacion[])//r
     }
     return busqueda;
 }
-void preparacion(Receta recetas[],int validosRecetas, StockIngrediente stock[],int validosStock)
+void preparar(Receta recetas[],int validosRecetas, StockIngrediente stock[],int validosStock)
 {
     FILE* fp;
     int validosDemanda=0;
@@ -326,8 +326,11 @@ void preparacion(Receta recetas[],int validosRecetas, StockIngrediente stock[],i
     int indice=0;///indice recetas
     int indicS=0;//indice stock
     float aModificar=0;
-
-    char ingrediente [TAM_MAX];
+    int preparados=0;
+    int flag;
+    int flagRec;
+    int maxim;
+    char ingrediente [CANT_MAX];
     fp=fopen("demanda.bin","rb");
     if(fp!=NULL)
     {
@@ -339,18 +342,35 @@ void preparacion(Receta recetas[],int validosRecetas, StockIngrediente stock[],i
             fread(&p,sizeof(Preparacion),1,fp);
             indice=busquedaReceta(recetas,validosRecetas,p.nombre_preparacion);
             //printf("indice: %i  nombre: %s \n",indice,p.nombre_preparacion);
-            for(int j=0; j<recetas[indice].cantIngredientes; j++)
+            preparados=0;
+            maxim=0;
+            flagRec=0;
+            while(preparados < p.cantidad && maxim == 0)
             {
-                strcpy(ingrediente,recetas[indice].ingredientes[j].nombre_ingrediente);
-                indicS=busquedaStock(stock,validosStock,ingrediente);
-                //printf("indice stock:%i ingrediente:%s\n",indicS,ingrediente);
-                aModificar=(p.cantidad)*(recetas[indice].ingredientes[j].cantidad);///meto todo en una variable para hacelo mas facil de leer
-                if(stock[indicS].cantidad>=aModificar)
+                flag=0;
+                for(int j=0; j < recetas[indice].cantIngredientes;j++)
                 {
+                    strcpy(ingrediente,recetas[indice].ingredientes[j].nombre_ingrediente);
+                    indicS=busquedaStock(stock,validosStock,ingrediente);
+                    aModificar= 1*(recetas[indice].ingredientes[j].cantidad);
                     stock[indicS].cantidad=stock[indicS].cantidad-aModificar;
+                    if(stock[indicS].cantidad>0)
+                    {
+                        flag++;
+                    }
                 }
+                    flagRec=flag;
+                if(flagRec == recetas[indice].cantIngredientes)
+                {
+                preparados++;
+                }
+                else
+                {
+                    maxim++;
+                }
+                flagRec=0;
             }
-
+            printf("%i\n",preparados);
         }
     }
     fclose(fp);
@@ -473,61 +493,3 @@ de ventas se pueda hacer una “baja lógica”, por lo tanto debería agregar u
 en la estructura de Venta.**/
 
 
-///PREPARACION:
-void preparar(Receta recetas[],int validosRecetas, StockIngrediente stock[],int validosStock)
-{
-    FILE* fp;
-    int validosDemanda=0;
-    Preparacion p;
-    int indice=0;///indice recetas
-    int indicS=0;//indice stock
-    float aModificar=0;
-    int preparados=0;
-    int flag;
-    int flagRec;
-    int maxim;
-    char ingrediente [CANT_MAX];
-    fp=fopen("demanda.bin","rb");
-    if(fp!=NULL)
-    {
-        fseek(fp,0,SEEK_END);
-        validosDemanda=ftell(fp)/sizeof(Preparacion);
-        fseek(fp,0,SEEK_SET);
-        for(int i=0; i<validosDemanda; i++)
-        {
-            fread(&p,sizeof(Preparacion),1,fp);
-            indice=busquedaReceta(recetas,validosRecetas,p.nombre_preparacion);
-            //printf("indice: %i  nombre: %s \n",indice,p.nombre_preparacion);
-            preparados=0;
-            maxim=0;
-            flagRec=0;
-            while(preparados < p.cantidad && maxim == 0)
-            {
-                flag=0;
-                for(int j=0; j < recetas[indice].cantIngredientes;j++)
-                {
-                    strcpy(ingrediente,recetas[indice].ingredientes[j].nombre_ingrediente);
-                    indicS=busquedaStock(stock,validosStock,ingrediente);
-                    aModificar= 1*(recetas[indice].ingredientes[j].cantidad);
-                    stock[indicS].cantidad=stock[indicS].cantidad-aModificar;
-                    if(stock[indicS].cantidad>0)
-                    {
-                        flag++;
-                    }
-                }
-                    flagRec=flag;
-                if(flagRec == recetas[indice].cantIngredientes)
-                {
-                preparados++;
-                }
-                else
-                {
-                    maxim++;
-                }
-                flagRec=0;
-            }
-            printf("%i\n",preparados);
-        }
-    }
-    fclose(fp);
-}
