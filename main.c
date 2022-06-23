@@ -180,7 +180,7 @@ scanf ("%i",&opcion);
     case 4:
         ingresarNuevaVenta (pedidoPrep,&cantVentas,%validosId);
 //        descontarStockPreparados (pedidoPrep,)/// necesito "stock preparados"
-//        depersistenciaVentas (ventaLista,cantVentas);
+        depersistenciaVentas (ventaLista,cantVentas,validosId);
         break;
 //    case 5:
 //        mostrarVenta (v);
