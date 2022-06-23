@@ -64,7 +64,7 @@ int busquedaStock(StockIngrediente[],int,char[]);
 void preparacion(Receta[],int, StockIngrediente[],int);
 void cargarPreciosPreparados (FILE*,PrecioPreparacion[],int,Receta[]);
 void mostrarPrecios(PrecioPreparacion);
-void muestraListaPrecios(StockIngrediente[],int);
+void muestraListaPrecios(PrecioPreparacion[],int);
 void modificarPrecioPreparado (FILE*,PrecioPreparacion[],int,Receta[]);
 void ingresarNuevaVenta (PedidoPreparacion[]);
 //void descontarStockPreparados (PedidoPreparacion[]);/// necesito "stock preparados"
@@ -167,7 +167,7 @@ scanf ("%i",&opcion);
         break;
     case 2:
         mostrarPrecios(precioP);
-        muestraListaPrecios(lista,validosRecetas);
+        muestraListaPrecios(preciosPrep,validosRecetas);
         break;
     case 3:
         modificarPrecioPreparado (parch,preciosPrep,validosRecetas,list);
@@ -455,11 +455,11 @@ void mostrarPrecios(PrecioPreparacion precioP)
     printf("El precio de %s es %f\n",precioP.nombre_preparacion,precioP.precio_venta);
     printf("\n");
 }
-void muestraListaPrecios(StockIngrediente lista[],int validosRecetas)
+void muestraListaPrecios(PrecioPreparacion preciosPrep[],int validosRecetas)
 {
     for(int i=0;i<validosRecetas;i++)
     {
-        mostrarPrecios(precioP[i]);
+        mostrarPrecios(preciosPrep[i]);
     }
 }
 
