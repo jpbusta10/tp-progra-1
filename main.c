@@ -365,38 +365,6 @@ int busquedaStock(StockIngrediente stock[],int validosStock,char ingrediente[])
     return indice;
 }
 
-//void devolucionVenta
-
-void ingresarNuevaVenta (PedidoPreparacion pedidoPrep[])
-{
-    FILE* pa;
-    char nombre [TAM_MAX];
-    int i=0;
-    char cont;
-    int cantidad;
-    pa=fopen("ventas.bin","ab");
-        if (pa!=NULL)
-        {
-            do
-            {
-                printf("Ingresar preparacion a vender: \n");
-                fflush(stdin);
-                gets (nombre);
-                strcpy (pedidoPrep[i].nombre_preparacion,nombre);
-                fwrite (&pedidoPrep[i].nombre_preparacion,sizeof(char),1,pa);
-                printf("Ingrese la cantidad a vender: \n");
-                fflush(stdin);
-                scanf("%i",&cantidad);
-                pedidoPrep[i].cantidad=cantidad;
-                fwrite(&pedidoPrep[i].cantidad,sizeof(int),1,pa);
-                printf("Desea continuar? s/n \n");
-                fflush(stdin);
-                scanf("%c",&cont);
-            }while (cont=='s' || cont=='S');
-
-
-        }
-}
 
 void modificarPrecioPreparado (FILE* parch,PrecioPreparacion preciosPrep[],int validosRecetas,Receta list[])
 {
@@ -463,3 +431,39 @@ void muestraListaPrecios(PrecioPreparacion preciosPrep[],int validosRecetas)
     }
 }
 
+void ingresarNuevaVenta (PedidoPreparacion pedidoPrep[])
+{
+    FILE* pa;
+    char nombre [TAM_MAX];
+    int i=0;
+    char cont;
+    int cantidad;
+    pa=fopen("ventas.bin","ab");
+        if (pa!=NULL)
+        {
+            do
+            {
+                printf("Ingresar preparacion a vender: \n");
+                fflush(stdin);
+                gets (nombre);
+                strcpy (pedidoPrep[i].nombre_preparacion,nombre);
+                fwrite (&pedidoPrep[i].nombre_preparacion,sizeof(char),1,pa);
+                printf("Ingrese la cantidad a vender: \n");
+                fflush(stdin);
+                scanf("%i",&cantidad);
+                pedidoPrep[i].cantidad=cantidad;
+                fwrite(&pedidoPrep[i].cantidad,sizeof(int),1,pa);
+                printf("Desea continuar? s/n \n");
+                fflush(stdin);
+                scanf("%c",&cont);
+            }while (cont=='s' || cont=='S');
+
+
+        }
+}
+//void descontarStockPreparados (pedidoPrep,)/// necesito "stock preparados",se puede quedar sin stock
+//void devolucionVenta//agregar baja venta
+/**El usuario se puede arrepentir de una compra, por lo tanto deberíamos poder
+eliminar una venta generada (búsqueda por idVenta), esto implica que en el archivo
+de ventas se pueda hacer una “baja lógica”, por lo tanto debería agregar un campo
+en la estructura de Venta.**/
