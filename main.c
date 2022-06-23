@@ -63,6 +63,8 @@ int busquedaReceta(Receta[],int,char[]);
 int busquedaStock(StockIngrediente[],int,char[]);
 void preparacion(Receta[],int, StockIngrediente[],int);
 void cargarPreciosPreparados (FILE*,PrecioPreparacion[],int,Receta[]);
+void mostrarPrecios(PrecioPreparacion);
+void muestraListaPrecios(StockIngrediente[],int);
 void modificarPrecioPreparado (FILE*,PrecioPreparacion[],int,Receta[]);
 void ingresarNuevaVenta (PedidoPreparacion[]);
 //void descontarStockPreparados (PedidoPreparacion[]);/// necesito "stock preparados"
@@ -150,9 +152,10 @@ printf ("VENTAS:\n");
 printf ("\n");
 printf ("Ingrese la operacion que desea realizar:\n");
 printf ("1. Cargar precios preparados\n");
-printf ("2. Modificar precio de preparado\n");
-printf ("3. Ingresar una nueva venta\n");
-printf ("4. Devolucion de venta\n");
+printf ("2. Mostrar lista precios\n");
+printf ("3. Modificar precio de preparado\n");
+printf ("4. Ingresar una nueva venta\n");
+printf ("5. Devolucion de venta\n");
 
 scanf ("%i",&opcion);
 
@@ -163,13 +166,17 @@ scanf ("%i",&opcion);
         cargarPreciosPreparados (parch,preciosPrep,validosRecetas,list);
         break;
     case 2:
+        mostrarPrecios(precioP);
+        muestraListaPrecios(lista,validosRecetas);
+        break;
+    case 3:
         modificarPrecioPreparado (parch,preciosPrep,validosRecetas,list);
         break;
-//    case 3:
+//    case 4:
 //        ingresarNuevaVenta (pedidoPrep);
 //        descontarStockPreparados (pedidoPrep,)/// necesito "stock preparados"
 //        break;
-//    case 4:
+//    case 5:
 //        devolucionVenta ();///se agrega baja en struct venta
 //        break;
     default:
@@ -185,7 +192,6 @@ system ("PAUSE");
 system ("cls");
 
 }while (control == 's' || continuar == 'S');
-
 
 
     return 0;
@@ -443,3 +449,17 @@ float precio;
   }
 fclose (parch);
 }
+
+void mostrarPrecios(PrecioPreparacion precioP)
+{
+    printf("El precio de %s es %f\n",precioP.nombre_preparacion,precioP.precio_venta);
+    printf("\n");
+}
+void muestraListaPrecios(StockIngrediente lista[],int validosRecetas)
+{
+    for(int i=0;i<validosRecetas;i++)
+    {
+        mostrarPrecios(precioP[i]);
+    }
+}
+
