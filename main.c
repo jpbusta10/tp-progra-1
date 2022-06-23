@@ -454,7 +454,7 @@ void muestraListaPrecios(PrecioPreparacion preciosPrep[],int validosRecetas)
     }
 }
 
-void ingresarNuevaVenta (PedidoPreparacion pedidoPrep[],int* cantVentas)
+void ingresarNuevaVenta (PedidoPreparacion pedidoPrep[],int* cantVentas,int* validosId)
 {
     FILE* pa;
     char nombre [TAM_MAX];
@@ -481,9 +481,15 @@ void ingresarNuevaVenta (PedidoPreparacion pedidoPrep[],int* cantVentas)
                 fflush(stdin);
                 scanf("%c",&cont);
             }while (cont=='s' || cont=='S');
-
-
+    (*validosId)=i;
+    i++;
         }
+        else
+        {
+            printf("Error-no se pudo abrir el archivo ventas.bin\n");
+        }
+
+        fclose(pa);
 }
 //void descontarStockPreparados (pedidoPrep,)/// necesito "stock preparados",se puede quedar sin stock
 //void devolucionVenta//agregar baja venta
