@@ -421,6 +421,15 @@ int busquedaStock(StockIngrediente stock[],int validosStock,char ingrediente[])
     return indice;
 }
 
+void persistenciaPreparados(PreparacionVenta preparados[],int validos)
+{
+    FILE* fp;
+    fp=fopen("stockventa.bin","wb");
+    {
+        fwrite(preparados,sizeof(PreparacionVenta),validos,fp);
+        fclose(fp);
+    }
+}
 
 void modificarPrecioPreparado (FILE* parch,PrecioPreparacion preciosPrep[],int validosRecetas,Receta list[])
 {
