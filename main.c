@@ -471,3 +471,64 @@ void ingresarNuevaVenta (PedidoPreparacion pedidoPrep[],int* cantVentas)
 eliminar una venta generada (búsqueda por idVenta), esto implica que en el archivo
 de ventas se pueda hacer una “baja lógica”, por lo tanto debería agregar un campo
 en la estructura de Venta.**/
+
+
+///PREPARACION:
+void preparar(Receta recetas[],int validosRecetas, StockIngrediente stock[],int validosStock)
+{
+    FILE* fp;
+    int validosDemanda=0;
+    Preparacion p;
+    int indice=0;///indice recetas
+    int indicS=0;//indice stock
+    float aModificar=0;
+    int preparados=0;
+    int flag;
+    int flagRec;
+    int maxim;
+    char ingrediente [CANT_MAX];
+    fp=fopen("demanda.bin","rb");
+    if(fp!=NULL)
+    {
+        fseek(fp,0,SEEK_END);
+        validosDemanda=ftell(fp)/sizeof(Preparacion);
+        fseek(fp,0,SEEK_SET);
+        for(int i=0; i<validosDemanda; i++)
+        {
+            fread(&p,sizeof(Preparacion),1,fp);
+            indice=busquedaReceta(recetas,validosRecetas,p.nombre_preparacion);
+            //printf("indice: %i  nombre: %s \n",indice,p.nombre_preparacion);
+            preparados=0;
+            maxim=0;
+            flagRec=0;
+            while(preparados < p.cantidad && maxim == 0)
+            {
+                flag=0;
+                for(int j=0; j < recetas[indice].cantIngredientes;j++)
+                {
+                    strcpy(ingrediente,recetas[indice].ingredientes[j].nombre_ingrediente);
+                    indicS=busquedaStock(stock,validosStock,ingrediente);
+                    aModificar= 1*(recetas[indice].ingredientes[j].cantidad);
+                    stock[indicS].cantidad=stock[indicS].cantidad-aModificar;
+                    if(stock[indicS].cantidad>0)
+                    {
+                        flag++;
+                    }
+                }
+                    flagRec=flag;
+                if(flagRec == recetas[indice].cantIngredientes)
+                {
+                preparados++;
+                }
+                else
+                {
+                    maxim++;
+                }
+                flagRec=0;
+            }
+            printf("%i\n",preparados);
+        }
+    }
+    fclose(fp);
+}
+
