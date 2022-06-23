@@ -66,7 +66,7 @@ void cargarPreciosPreparados (FILE*,PrecioPreparacion[],int,Receta[]);
 void mostrarPrecios(PrecioPreparacion);
 void muestraListaPrecios(PrecioPreparacion[],int);
 void modificarPrecioPreparado (FILE*,PrecioPreparacion[],int,Receta[]);
-void ingresarNuevaVenta (PedidoPreparacion[],int*);
+void ingresarNuevaVenta (PedidoPreparacion[],int*,int*);
 //void descontarStockPreparados (PedidoPreparacion[]);/// necesito "stock preparados"
 //void devolucionVenta ();///se agrega baja en struct venta
 
