@@ -61,7 +61,9 @@ void muestraReceta(Receta);
 void muestraListaRecetas(Receta[],int);
 int busquedaReceta(Receta[],int,char[]);
 int busquedaStock(StockIngrediente[],int,char[]);
-void preparacion(Receta[],int, StockIngrediente[],int);
+void preparar(Receta[],int,StockIngrediente[],int,PreparacionVenta[],int*);
+void mostrarPreparado(PreparacionVenta);
+void mostrarListapreparado(PreparacionVenta[],int);
 void cargarPreciosPreparados (FILE*,PrecioPreparacion[],int,Receta[]);
 void mostrarPrecios(PrecioPreparacion);
 void muestraListaPrecios(PrecioPreparacion[],int);
@@ -324,7 +326,7 @@ int busquedaReceta(Receta lista[],int validosReceta,char nombrePreparacion[])//r
     }
     return busqueda;
 }
-void preparar(Receta recetas[],int validosRecetas, StockIngrediente stock[],int validosStock, PreparacionVenta preparadosListos[])
+void preparar(Receta recetas[],int validosRecetas, StockIngrediente stock[],int validosStock, PreparacionVenta preparadosListos[],int* validosPreparados)
 {
     FILE* fp;
     int validosDemanda=0;
@@ -336,6 +338,7 @@ void preparar(Receta recetas[],int validosRecetas, StockIngrediente stock[],int 
     int flag;
     int flagRec;
     int maxim;
+    int n=-1;
     char ingrediente [CANT_MAX];
     fp=fopen("demanda.bin","rb");
     if(fp!=NULL)
@@ -376,14 +379,31 @@ void preparar(Receta recetas[],int validosRecetas, StockIngrediente stock[],int 
                 }
                 flagRec=0;
             }
-            if(preparados != 0)
+            if(preparados!=0)
             {
-                printf("%s: %i\n",p.nombre_preparacion,preparados);
+                n++;
+                strcpy(preparadosListos[n].nombre_preparacion,recetas[indice].nombre_preparacion);
+                preparadosListos[n].cantidad=preparados;
             }
         }
     }
+    *validosPreparados=n;
     fclose(fp);
 }
+
+void mostrarPreparado(PreparacionVenta preparado)
+{
+    printf("%s: %i\n",preparado.nombre_preparacion,preparado.cantidad);
+}
+
+void mostrarListapreparado(PreparacionVenta preparado[],int validos)
+{
+    for(int i=0;i < validos;i++)
+    {
+        mostrarPreparado(preparado[i]);
+    }
+}
+
 int busquedaStock(StockIngrediente stock[],int validosStock,char ingrediente[])
 {
     int indice=0;
