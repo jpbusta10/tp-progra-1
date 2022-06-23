@@ -323,7 +323,7 @@ int busquedaReceta(Receta lista[],int validosReceta,char nombrePreparacion[])//r
     }
     return busqueda;
 }
-void preparar(Receta recetas[],int validosRecetas, StockIngrediente stock[],int validosStock)
+void preparar(Receta recetas[],int validosRecetas, StockIngrediente stock[],int validosStock, PreparacionVenta preparadosListos[])
 {
     FILE* fp;
     int validosDemanda=0;
@@ -357,10 +357,10 @@ void preparar(Receta recetas[],int validosRecetas, StockIngrediente stock[],int 
                 {
                     strcpy(ingrediente,recetas[indice].ingredientes[j].nombre_ingrediente);
                     indicS=busquedaStock(stock,validosStock,ingrediente);
-                    aModificar= 1*(recetas[indice].ingredientes[j].cantidad);
-                    stock[indicS].cantidad=stock[indicS].cantidad-aModificar;
-                    if(stock[indicS].cantidad>0)
+                    if((stock[indicS].cantidad>0) && (stock[indicS].cantidad >= recetas[indice].ingredientes[j].cantidad))
                     {
+                    aModificar=(recetas[indice].ingredientes[j].cantidad);
+                    stock[indicS].cantidad=stock[indicS].cantidad-aModificar;
                         flag++;
                     }
                 }
@@ -375,7 +375,10 @@ void preparar(Receta recetas[],int validosRecetas, StockIngrediente stock[],int 
                 }
                 flagRec=0;
             }
-            printf("%i\n",preparados);
+            if(preparados != 0)
+            {
+                printf("%s: %i\n",p.nombre_preparacion,preparados);
+            }
         }
     }
     fclose(fp);
