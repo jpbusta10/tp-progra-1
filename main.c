@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -48,6 +47,12 @@ int cantItems; ///los validos del arreglo de items_pedido
 float valor_total; ///valor total a pagar
 int baja;
 }Venta;
+typedef struct
+{
+char nombre_preparacion[20];
+int cantidad; ///por unidad, no hay por peso
+}PreparacionVenta;
+
 
 ///prototipados
 void despersistenciaStock(StockIngrediente[],int*);
@@ -61,7 +66,7 @@ void muestraReceta(Receta);
 void muestraListaRecetas(Receta[],int);
 int busquedaReceta(Receta[],int,char[]);
 int busquedaStock(StockIngrediente[],int,char[]);
-void preparar(Receta[],int,StockIngrediente[],int,PreparacionVenta[],int*);
+void preparar(Receta[],int, StockIngrediente[],int, PreparacionVenta[],int*);
 void mostrarPreparado(PreparacionVenta);
 void mostrarListapreparado(PreparacionVenta[],int);
 void cargarPreciosPreparados (FILE*,PrecioPreparacion[],int,Receta[]);
@@ -71,7 +76,7 @@ void modificarPrecioPreparado (FILE*,PrecioPreparacion[],int,Receta[]);
 void ingresarNuevaVenta (PedidoPreparacion[],int*,int*);
 void depersistenciaVentas (Venta[],PedidoPreparacion[],int,int,PrecioPreparacion[],int);
 float costoTotalVenta (PedidoPreparacion[],int,int,PrecioPreparacion[],int);
-void mostrarVenta (Venta,int);
+void mostrarVenta (Venta);
 void mostrarListaVentas (Venta[],int);
 void devolucionVenta (Venta[],int);
 //void descontarStockPreparados (PedidoPreparacion[]);/// necesito "stock preparados"
@@ -82,37 +87,27 @@ void devolucionVenta (Venta[],int);
 int main()
 {
 FILE* parch;
-int opcion;
+int opcion=0;
 char continuar;
 char control;
-int validosStock;
-int validosDemanda;
-int validosRecetas;
-int validosId;
+int validosStock=0;
+int validosDemanda=0;
+int validosRecetas=0;
+int validosId=0;
+int validosPreparados=0;
 int item=0;
-StockIngrediente lista [TAM_MAX];
-StockIngrediente p;
-Preparacion listaDemanda [TAM_MAX];
-Preparacion P;
-Receta list[TAM_MAX];
-Receta r;
+StockIngrediente stock [TAM_MAX];
+Receta recetas[TAM_MAX];
 PrecioPreparacion preciosPrep [TAM_MAX];
-PrecioPreparacion precioP;
 PedidoPreparacion pedidoPrep [TAM_MAX];
-PedidoPreparacion pP;
+PreparacionVenta preparados [TAM_MAX];
 Venta ventaLista [TAM_MAX];
-Venta v;
+despersistenciaStock(stock,&validosStock);
+despersistenciaReceta(recetas,&validosRecetas);
+preparar(recetas,validosRecetas,stock,validosStock,preparados,&validosPreparados);
+mostrarListapreparado(preparados,validosPreparados);
 
-despersistenciaStock(lista,&validosStock);
-mostrarStock(p);
-muestraListaStock(lista,validosStock);
-despercistenciaDemanda (listaDemanda,&validosDemanda);
-muestraDemanda(P);
-muestraListaDemanda(listaDemanda,validosDemanda);
-despersistenciaReceta(list,&validosRecetas);
-muestraReceta(r);
-muestraListaRecetas(list,validosRecetas);
-
+/*
 do
 {
 printf ("Ingrese opcion:\n");
@@ -208,7 +203,7 @@ system ("PAUSE");
 system ("cls");
 
 }while (control == 's' || continuar == 'S');
-
+*/
     return 0;
 }
 
@@ -318,7 +313,7 @@ void muestraListaRecetas(Receta list[],int validosRecetas)
         muestraReceta(list[i]);
     }
 }
-int busquedaReceta(Receta lista[],int validosReceta,char nombrePreparacion[])//retorna el indice de la receta a buscar por el nombre 
+int busquedaReceta(Receta lista[],int validosReceta,char nombrePreparacion[])//retorna el indice de la receta a buscar por el nombre
 {
     int busqueda=0;
     for(int i=0;i<validosReceta;i++)
@@ -343,7 +338,7 @@ void preparar(Receta recetas[],int validosRecetas, StockIngrediente stock[],int 
     int flagRec;
     int maxim;
     int n=-1;
-    char ingrediente [CANT_MAX];
+    char ingrediente [TAM_MAX];
     fp=fopen("demanda.bin","rb");
     if(fp!=NULL)
     {
@@ -496,7 +491,7 @@ void muestraListaPrecios(PrecioPreparacion preciosPrep[],int validosRecetas)
     }
 }
 
-
+/*
 void ingresarNuevaVenta (PedidoPreparacion pedidoPrep[],int* validosId,int* item)
 {
     char nombre [TAM_MAX];
@@ -508,27 +503,33 @@ void ingresarNuevaVenta (PedidoPreparacion pedidoPrep[],int* validosId,int* item
                 printf("Ingresar preparacion a vender: \n");
                 fflush(stdin);
                 gets (nombre);
-                strcpy (pedidoPrep[item].nombre_preparacion,nombre);
+                strcpy (pedidoPrep[*item].nombre_preparacion,nombre);
                 printf("Ingrese la cantidad a vender: \n");
                 fflush(stdin);
                 scanf("%i",&cantidad);
-                pedidoPrep[item].cantidad=cantidad;
+                pedidoPrep[*item].cantidad=cantidad;
                 item++;
                 printf("Desea continuar? s/n \n");
                 fflush(stdin);
                 scanf("%c",&cont);
             }while (cont=='s' || cont=='S' && item<=20);
     (*validosId)++;
-}
+    FILE* fp;
+    fp=fopen()
+
+
+
+
+
         else
         {
             printf("Error-no se pudo abrir el archivo ventas.bin\n");
         }
 
-        fclose(pa);
+        fclose(fp);
 }
 
-
+*//*
 void depersistenciaVentas (Venta ventaLista[],PedidoPreparacion pedidoPrep[],int validosId,int item,PrecioPreparacion preciosPrep[],int validosRecetas)
 {
     FILE* pa;
@@ -572,7 +573,7 @@ void depersistenciaVentas (Venta ventaLista[],PedidoPreparacion pedidoPrep[],int
 
         }
 }
-
+*/
 float costoTotalVenta (PedidoPreparacion pedidoPrep[],int validosId,int item,PrecioPreparacion preciosPrep[],int validosRecetas)
 {
     float valor=0;
@@ -594,10 +595,10 @@ float costoTotalVenta (PedidoPreparacion pedidoPrep[],int validosId,int item,Pre
     return valor;
 }
 
-void mostrarVenta (Venta v,int item)
+void mostrarVenta (Venta v)
 {
     printf("Id Venta: %s\n",v.idVenta);
-    for (int i=0;i<item;i++)
+    for (int i=0;i<v.cantItems;i++)
     {
       printf("Pedido: -Preparacion: %s     -Cantidad: %i \n",v.items_pedido[i].nombre_preparacion,v.items_pedido[i].cantidad);
     }
@@ -605,7 +606,7 @@ void mostrarVenta (Venta v,int item)
     printf("Valor total venta: %f\n",v.valor_total);
 }
 
-void mostrarListaVentas (Venta ventaLista[],int validosId)
+void mostrarListaVentas(Venta ventaLista[],int validosId)
 {
     for(int i=0;i<validosId;i++)
     {
@@ -631,7 +632,3 @@ char Id [TAM_MAX];
 
 
 //void descontarStockPreparados (pedidoPrep,)/// necesito "stockventa", stock de preaprados para la venta,se puede quedar sin stock
-
-
-
-
