@@ -105,9 +105,9 @@ Venta ventaLista [TAM_MAX];
 despersistenciaStock(stock,&validosStock);
 despersistenciaReceta(recetas,&validosRecetas);
 preparar(recetas,validosRecetas,stock,validosStock,preparados,&validosPreparados);
-mostrarListapreparado(preparados,validosPreparados);
+//mostrarListapreparado(preparados,validosPreparados);
 
-/*
+
 do
 {
 printf ("Ingrese opcion:\n");
@@ -121,9 +121,11 @@ scanf ("%i",&opcion);
     {
     case 1:
         printf ("1. Ingredientes no utilizados\n");
+        muestraListaStock(stock,validosStock);
         break;
     case 2:
         printf ("2. Productos no vendidos\n");
+        mostrarListapreparado(preparados,validosPreparados);
         break;
     case 3:
         printf ("3. Ingreso total del dia\n");
@@ -148,7 +150,7 @@ system ("cls");
 
 
 //SUBMENU VENTAS
-
+/*
 system ("PAUSE");
 system ("cls");
 
@@ -170,7 +172,7 @@ scanf ("%i",&opcion);
     {
     case 1:
 
-        cargarPreciosPreparados (parch,preciosPrep,validosRecetas,list);
+        cargarPreciosPreparados (parch,preciosPrep,validosRecetas,recetas);
         break;
     case 2:
         mostrarPrecios(precioP);
