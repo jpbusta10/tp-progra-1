@@ -445,6 +445,19 @@ void persistenciaPreparados(PreparacionVenta preparados[],int validos)
         fclose(fp);
     }
 }
+
+void listaPreciosPreparados(PrecioPreparacion precios[],int* validos,Preparacion listaDem[],int validosDem)
+{
+    despercistenciaDemanda(listaDem,&validosDem);
+    int valor;
+    for(int i=0;i < validosDem;i++)
+    {
+        strcpy(precios[i].nombre_preparacion,listaDem[i].nombre_preparacion);
+        printf("Ingrese el precio por unidad de %s: \n",precios[i].nombre_preparacion);
+        scanf("%i",&valor);
+        precios[i].precio_venta=valor;
+    }
+}
 /*
 void modificarPrecioPreparado (FILE* parch,PrecioPreparacion preciosPrep[],int validosRecetas,Receta list[])
 {
