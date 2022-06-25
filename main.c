@@ -514,6 +514,13 @@ void mostrarPrecios(PrecioPreparacion precioP)
 }
 void muestraListaPrecios(PrecioPreparacion preciosPrep[],int validosRecetas)
 {
+    FILE* fp;
+    fp=fopen("precios.bin","rb");
+    if(fp!=NULL)
+    {
+        fread(preciosPrep,sizeof(PrecioPreparacion),validosRecetas,fp);
+        fclose(fp);
+    }
     for(int i=0; i<validosRecetas; i++)
     {
         mostrarPrecios(preciosPrep[i]);
