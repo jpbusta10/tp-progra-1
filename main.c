@@ -446,7 +446,7 @@ void persistenciaPreparados(PreparacionVenta preparados[],int validos)
     }
 }
 
-void listaPreciosPreparados(PrecioPreparacion precios[],int* validos,Preparacion listaDem[],int validosDem)
+void listaPreciosPreparados(PrecioPreparacion precios[],Preparacion listaDem[],int validosDem)
 {
     despercistenciaDemanda(listaDem,&validosDem);
     int valor;
