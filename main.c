@@ -79,6 +79,7 @@ float costoTotalVenta (PedidoPreparacion[],int,int,PrecioPreparacion[],int);
 void mostrarVenta (Venta);
 void mostrarListaVentas (Venta[],int);
 void devolucionVenta (Venta[],int);
+void persistenciaStock(StockIngrediente[],int);
 //void descontarStockPreparados (PedidoPreparacion[]);/// necesito "stock preparados"
 
 
@@ -105,6 +106,11 @@ Venta ventaLista [TAM_MAX];
 despersistenciaStock(stock,&validosStock);
 despersistenciaReceta(recetas,&validosRecetas);
 preparar(recetas,validosRecetas,stock,validosStock,preparados,&validosPreparados);
+persistenciaPreparados(preparados,validosPreparados);
+muestraListaStock(stock,validosStock);
+persistenciaStock(stock,validosStock);
+
+
 //mostrarListapreparado(preparados,validosPreparados);
 
 
@@ -207,6 +213,18 @@ system ("cls");
 }while (control == 's' || continuar == 'S');
 */
     return 0;
+}
+void persistenciaStock(StockIngrediente stock [],int validosStock)
+{
+    FILE* fp;
+    fp=fopen("stockingredientes.bin","wb");
+    if(fp!=NULL)
+    {
+
+            fwrite(stock,sizeof(StockIngrediente),validosStock,fp);
+
+    }
+    fclose(fp);
 }
 
 void despersistenciaStock(StockIngrediente lista [],int*validos)
@@ -427,7 +445,7 @@ void persistenciaPreparados(PreparacionVenta preparados[],int validos)
         fclose(fp);
     }
 }
-
+/*
 void modificarPrecioPreparado (FILE* parch,PrecioPreparacion preciosPrep[],int validosRecetas,Receta list[])
 {
   parch=fopen ("precios.bin","r+b");
@@ -454,8 +472,8 @@ void modificarPrecioPreparado (FILE* parch,PrecioPreparacion preciosPrep[],int v
     }
 fclose (parch);
 }
-
-void cargarPreciosPreparados (FILE* parch,PrecioPreparacion preciosPrep[],int validosRecetas,Receta list[])
+*/
+/*void cargarPreciosPreparados (FILE* parch,PrecioPreparacion preciosPrep[],int validosRecetas,Receta list[])
 {
 parch=fopen ("precios.bin","wb");
 float precio;
@@ -479,7 +497,7 @@ float precio;
   }
 fclose (parch);
 }
-
+*/
 void mostrarPrecios(PrecioPreparacion precioP)
 {
     printf("El precio de %s es %f\n",precioP.nombre_preparacion,precioP.precio_venta);
@@ -631,6 +649,7 @@ char Id [TAM_MAX];
         }
 
 }
+
 
 
 //void descontarStockPreparados (pedidoPrep,)/// necesito "stockventa", stock de preaprados para la venta,se puede quedar sin stock
