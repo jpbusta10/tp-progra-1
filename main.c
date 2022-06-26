@@ -109,10 +109,7 @@ int main()
     despersistenciaReceta(recetas,&validosRecetas);
     preparar(recetas,validosRecetas,stock,validosStock,preparados,&validosPreparados);
     persistenciaPreparados(preparados,validosPreparados);
-
-    persistenciaStock(stock,validosStock);
     //mostrarListapreparado(preparados,validosPreparados);
-
 
     while(true)
     {
@@ -129,12 +126,28 @@ int main()
         case 1:
             printf ("1. Ingredientes no utilizados\n");
             muestraListaStock(stock,validosStock);
+            printf("desea persistir el stock? s/n\n");
+            fflush(stdin);
+            scanf("%c",&continuar);
+            if(continuar=='s'||continuar=='S')
+            {
+                persistenciaStock(stock,validosStock);
+            }
+            continuar='j';
             system ("PAUSE");
             system ("cls");
             break;
         case 2:
             printf ("2. Productos no vendidos\n");
             mostrarListapreparado(preparados,validosPreparados);
+            printf("desea persistir los preparados? s/n\n");
+            fflush(stdin);
+            scanf("%c",&continuar);
+            if(continuar=='s'||continuar=='S')
+            {
+                persistenciaPreparados(preparados,validosPreparados);
+            }
+            continuar = 'j';
             system ("PAUSE");
             system ("cls");
             break;
