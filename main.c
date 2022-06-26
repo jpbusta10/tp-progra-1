@@ -75,7 +75,7 @@ void cargarPreciosPreparados (PrecioPreparacion[],int,Receta[]);
 void mostrarPrecios(PrecioPreparacion);
 void muestraListaPrecios(PrecioPreparacion[],int);
 void modificarPrecioPreparado(Receta[],int);
-//void ingresarNuevaVenta (PedidoPreparacion[],int*,int*);
+void ingresarNuevaVenta(int*,Receta[],int);
 //void depersistenciaVentas (Venta[],PedidoPreparacion[],int,int,PrecioPreparacion[],int);
 float costoTotalVenta (PedidoPreparacion[],int,int,PrecioPreparacion[],int);
 void mostrarVenta (Venta);
@@ -84,6 +84,7 @@ void devolucionVenta (Venta[],int);
 void persistenciaStock(StockIngrediente[],int);
 //void descontarStockPreparados (PedidoPreparacion[]);/// necesito "stock preparados"
 void persistenciaPreparados(PreparacionVenta[],int);
+void muestraVentas();
 
 
 
@@ -98,6 +99,7 @@ int main()
     int validosRecetas=0;
     int validosId=0;
     int validosPreparados=0;
+    int validosVenta=0;
     int item=0;
     StockIngrediente stock [TAM_MAX];
     Receta recetas[TAM_MAX];
@@ -185,12 +187,12 @@ int main()
 
                     cargarPreciosPreparados (preciosPrep,validosRecetas,recetas);
                     system ("PAUSE");
-            system ("cls");
+                    system ("cls");
                     break;
                 case 2:
                     muestraListaPrecios(preciosPrep,validosRecetas);
                     system ("PAUSE");
-            system ("cls");
+                    system ("cls");
                     break;
                 case 3:
                     modificarPrecioPreparado (recetas,validosRecetas);
@@ -198,12 +200,11 @@ int main()
                     system ("cls");
                     break;
                 case 4:
-                    //ingresarNuevaVenta (pedidoPrep,&validosId,&item);
+                    ingresarNuevaVenta(validosVenta,recetas,validosRecetas);
                     //        descontarStockPreparados (pedidoPrep,)/// necesito "stock preparados"
-                    //depersistenciaVentas (ventaLista,pedidoPrep,validosId,item,preciosPrep,validosRecetas);
                     break;
                 case 5:
-                    mostrarListaVentas (ventaLista,validosId);
+                    muestraVentas();
                     system ("PAUSE");
                     system ("cls");
                     break;
@@ -517,7 +518,7 @@ int busquedaStock(StockIngrediente stock[],int validosStock,char ingrediente[])
 void persistenciaPreparados(PreparacionVenta preparados[],int validos)
 {
     FILE* fp;
-    fp=fopen("stockventa.bin","wb");
+    fp=fopen("stockPreparados.bin","wb");
     {
         fwrite(preparados,sizeof(PreparacionVenta),validos,fp);
         fclose(fp);
@@ -535,7 +536,7 @@ void modificarPrecioPreparado(Receta recetas[],int validosReceta)
     if (parch!=NULL)
     {
         printf("de la siguiente lista: \n");
-        for(int i=0;i<validosReceta;i++)
+        for(int i=0; i<validosReceta; i++)
         {
             printf("%s\n",recetas[i].nombre_preparacion);
         }
@@ -610,54 +611,116 @@ void muestraListaPrecios(PrecioPreparacion preciosPrep[],int validosRecetas)
     }
 }
 
-/*
-void ingresarNuevaVenta (PedidoPreparacion pedidoPrep[],int* validosId,int* item)
+
+void ingresarNuevaVenta (int* validosVentas,Receta recetas[],int validosRecetas)
 {
     char nombre [TAM_MAX];
     char cont;
-    int cantidad;
-
-            do
-            {
-                printf("Ingresar preparacion a vender: \n");
-                fflush(stdin);
-                gets (nombre);
-                strcpy (pedidoPrep[*item].nombre_preparacion,nombre);
-                printf("Ingrese la cantidad a vender: \n");
-                fflush(stdin);
-                scanf("%i",&cantidad);
-                pedidoPrep[*item].cantidad=cantidad;
-                item++;
-                printf("Desea continuar? s/n \n");
-                fflush(stdin);
-                scanf("%c",&cont);
-            }while (cont=='s' || cont=='S' && item<=20);
-    (*validosId)++;
+    int item=0;
+    int contador=0;
+    int validosPrecios=0;
+    PrecioPreparacion precios[TAM_MAX];
+    int cantidad=0;
+    int indicePrecio=0;
+    float acumulador=0;
+    float valorItem=0;
+    Venta v;
     FILE* fp;
-    fp=fopen()
-
-
-
-
-
-        else
+    fp=fopen("precios.bin","rb");
+    if(fp!=NULL)
+    {
+        while(fread(&precios,sizeof(PrecioPreparacion),1,fp)>0)
         {
-            printf("Error-no se pudo abrir el archivo ventas.bin\n");
+            validosPrecios++;
         }
+    }
+    fclose(fp);
 
-        fclose(fp);
+    do
+    {
+        printf("de las siguientes preparaciones:\n");
+        for(int i=0; i<validosRecetas; i++)
+        {
+            printf("%s\n",recetas[i].nombre_preparacion);
+        }
+        printf("\nIngresar preparacion a vender: \n");
+        fflush(stdin);
+        gets (nombre);
+        strcpy (v.items_pedido[item].nombre_preparacion,nombre);
+        printf("Ingrese la cantidad a vender: \n");
+        scanf("%i",&cantidad);
+        for(int i=0; i<validosPrecios; i++)
+        {
+            if(strcmp(precios[i].nombre_preparacion,nombre)==0)
+            {
+                indicePrecio=i;
+            }
+        }
+        valorItem=cantidad*precios[indicePrecio].precio_venta;
+        printf("el valor de su pedido es de %.2f\n",valorItem);
+
+        v.items_pedido[item].cantidad=cantidad;
+        item++;
+        v.valor_total=acumulador+valorItem;
+        acumulador=acumulador+valorItem;
+        (*validosVentas)++;
+        printf("Desea agregar mas items? s/n \n");
+        fflush(stdin);
+        scanf("%c",&cont);
+        contador++;
+        printf("el total de la venta es: %.2f\n",acumulador);
+    }
+    while (cont=='s' || cont=='S' && item<=20);
+    v.cantItems=item;
+    printf("valor item %i\n",item);
+    FILE* jp;
+    Venta vent[TAM_MAX];
+    jp=fopen("ventas.bin","rb");
+    if(jp!=NULL)
+    {
+        int val=0;
+        fseek(jp,0,SEEK_END);
+        val=ftell(jp)/sizeof(Venta);
+        fseek(jp,0,SEEK_SET);
+        v.idVenta=val+1;
+    }
+    fclose(jp);
+    FILE*kk;
+    kk=fopen("ventas.bin","ab");
+    if(kk!=NULL)
+    {
+        fwrite(&v,sizeof(Venta),1,kk);
+    }
+    fclose(kk);
+
 }
-
-*//*
-void depersistenciaVentas (Venta ventaLista[],PedidoPreparacion pedidoPrep[],int validosId,int item,PrecioPreparacion preciosPrep[],int validosRecetas)
+void muestraVentas()
 {
-FILE* pa;
-char identificacion [TAM_MAX];
-char cont;
-int cantidad;
-float valorTotal;
-int altaVenta=1;
-pa=fopen("ventas.bin","ab");
+    FILE* fp;
+    Venta ventas[TAM_MAX];
+    int val=0;
+    fp=fopen("ventas.bin","rb");
+    if(fp!=NULL)
+    {
+        fseek(fp,0,SEEK_END);
+        val=ftell(fp)/sizeof(Venta);
+        fseek(fp,0,SEEK_SET);
+        fread(&ventas,sizeof(Venta),val,fp);
+    }
+    fclose(fp);
+    mostrarListaVentas(ventas,val);
+}
+/*
+
+void persistenciaVentas (Venta ventaLista[],PedidoPreparacion pedidoPrep[],int validosId,int item,PrecioPreparacion preciosPrep[],int validosRecetas)
+{
+    FILE* pa;
+    char identificacion [TAM_MAX];
+    char cont;
+    int cantidad=0;
+    float valorTotal;
+    int altaVenta=1;
+    pa=fopen("ventas.bin","ab");
     if (pa!=NULL)
     {
         do
@@ -687,10 +750,12 @@ pa=fopen("ventas.bin","ab");
             printf("Desea continuar? s/n \n");
             fflush(stdin);
             scanf("%c",&cont);
-        }while (cont=='s' || cont=='S');
+        }
+        while (cont=='s' || cont=='S');
 
 
     }
+    fclose(pa);
 }
 */
 float costoTotalVenta (PedidoPreparacion pedidoPrep[],int validosId,int item,PrecioPreparacion preciosPrep[],int validosRecetas)
@@ -717,7 +782,7 @@ float costoTotalVenta (PedidoPreparacion pedidoPrep[],int validosId,int item,Pre
 
 void mostrarVenta (Venta v)
 {
-    printf("Id Venta: %s\n",v.idVenta);
+    printf("Id Venta: %i\n",v.idVenta);
     for (int i=0; i<v.cantItems; i++)
     {
         printf("Pedido: -Preparacion: %s     -Cantidad: %i \n",v.items_pedido[i].nombre_preparacion,v.items_pedido[i].cantidad);
