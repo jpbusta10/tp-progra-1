@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
+#include <stdbool.h>
 #define TAM_MAX 20
 typedef struct
 {
@@ -81,7 +83,7 @@ void mostrarListaVentas (Venta[],int);
 void devolucionVenta (Venta[],int);
 void persistenciaStock(StockIngrediente[],int);
 //void descontarStockPreparados (PedidoPreparacion[]);/// necesito "stock preparados"
-
+void persistenciaPreparados(PreparacionVenta[],int);
 
 
 
@@ -109,18 +111,17 @@ int main()
     persistenciaPreparados(preparados,validosPreparados);
 
     persistenciaStock(stock,validosStock);
+    //mostrarListapreparado(preparados,validosPreparados);
 
 
-//mostrarListapreparado(preparados,validosPreparados);
-
-
-    do
+    while(true)
     {
         printf ("Ingrese opcion:\n");
         printf ("1. Ver ingredientes no utilizados\n");
         printf ("2. Ver productos no vendidos\n");
         printf ("3. Ver ingreso total del dia\n");
         printf ("4. Ver ganancia total del dia\n");
+        printf("5. Menu ventas\n");
         scanf ("%i",&opcion);
 
         switch (opcion)
@@ -128,10 +129,14 @@ int main()
         case 1:
             printf ("1. Ingredientes no utilizados\n");
             muestraListaStock(stock,validosStock);
+            system ("PAUSE");
+            system ("cls");
             break;
         case 2:
             printf ("2. Productos no vendidos\n");
             mostrarListapreparado(preparados,validosPreparados);
+            system ("PAUSE");
+            system ("cls");
             break;
         case 3:
             printf ("3. Ingreso total del dia\n");
@@ -139,26 +144,82 @@ int main()
         case 4:
             printf ("4. Ganancia total del dia\n");
             break;
-        default:
-            printf ("La opcion ingresada no existe\n");
-            break;
+        case 5:
+            system ("PAUSE");
+            system ("cls");
+            while (true)
+            {
+                printf ("VENTAS:\n");
+                printf ("\n");
+                printf ("Ingrese la operacion que desea realizar:\n");
+                printf ("1. Cargar precios preparados\n");
+                printf ("2. Mostrar lista precios\n");
+                printf ("3. Modificar precio de preparado\n");
+                printf ("4. Ingresar una nueva venta\n");
+                printf ("5. Mostrar ventas\n");
+                printf ("6. Devolucion de venta\n");
+
+
+                scanf ("%i",&opcion);
+
+                switch (opcion)
+                {
+                case 1:
+
+                    cargarPreciosPreparados (preciosPrep,validosRecetas,recetas);
+                    system ("PAUSE");
+            system ("cls");
+                    break;
+                case 2:
+                    muestraListaPrecios(preciosPrep,validosRecetas);
+                    system ("PAUSE");
+            system ("cls");
+                    break;
+                case 3:
+                    modificarPrecioPreparado ();
+                    system ("PAUSE");
+                    system ("cls");
+                    break;
+                case 4:
+                    //ingresarNuevaVenta (pedidoPrep,&validosId,&item);
+                    //        descontarStockPreparados (pedidoPrep,)/// necesito "stock preparados"
+                    //depersistenciaVentas (ventaLista,pedidoPrep,validosId,item,preciosPrep,validosRecetas);
+                    break;
+                case 5:
+                    mostrarListaVentas (ventaLista,validosId);
+                    system ("PAUSE");
+                    system ("cls");
+                    break;
+                case 6:
+                    devolucionVenta (ventaLista,validosId);
+                    system ("PAUSE");
+                    system ("cls");
+                    break;
+
+                default:
+                    printf ("usted esta volviendo a la opcion anterior");
+                    break;
+                }
+
+            default:
+                printf ("usted esta volviendo al menu principal");
+                break;
+            }
+
+            system ("PAUSE");
+            system ("cls");
+
         }
 
-        printf("Desea continuar?\n");
-        fflush(stdin);
-        scanf("%c",&continuar);
-
-        system ("PAUSE");
-        system ("cls");
 
     }
-    while (continuar == 's' || continuar == 'S');
+
 
 
 
 //SUBMENU VENTAS
 
-    system ("PAUSE");
+    /*system ("PAUSE");
     system ("cls");
 
     do
@@ -211,7 +272,7 @@ int main()
     system ("cls");
 
     }while (control == 's' || continuar == 'S');
-
+    */
     return 0;
 }
 void persistenciaStock(StockIngrediente stock [],int validosStock)
@@ -464,7 +525,7 @@ void modificarPrecioPreparado ()
         fseek(parch,0,SEEK_SET);
         for (int i=0; i<validosPrecios; i++)
         {
-           fread(&precios[i],sizeof(PrecioPreparacion),1,parch);
+            fread(&precios[i],sizeof(PrecioPreparacion),1,parch);
 
             if (strcmp(nombre,precios[i].nombre_preparacion)==0)
             {
@@ -568,46 +629,46 @@ void ingresarNuevaVenta (PedidoPreparacion pedidoPrep[],int* validosId,int* item
 *//*
 void depersistenciaVentas (Venta ventaLista[],PedidoPreparacion pedidoPrep[],int validosId,int item,PrecioPreparacion preciosPrep[],int validosRecetas)
 {
-    FILE* pa;
-    char identificacion [TAM_MAX];
-    char cont;
-    int cantidad;
-    float valorTotal;
-    int altaVenta=1;
-    pa=fopen("ventas.bin","ab");
-        if (pa!=NULL)
+FILE* pa;
+char identificacion [TAM_MAX];
+char cont;
+int cantidad;
+float valorTotal;
+int altaVenta=1;
+pa=fopen("ventas.bin","ab");
+    if (pa!=NULL)
+    {
+        do
         {
-            do
-            {
-                printf("Ingresar identificacion del comprador: \n");
-                fflush(stdin);
-                gets (nombre);
-                strcpy (ventaLista[validosId].idVenta,nombre);
-                fwrite (&ventaLista[validosId].idVenta,sizeof(char),1,pa);
+            printf("Ingresar identificacion del comprador: \n");
+            fflush(stdin);
+            gets (nombre);
+            strcpy (ventaLista[validosId].idVenta,nombre);
+            fwrite (&ventaLista[validosId].idVenta,sizeof(char),1,pa);
 
-                strcpy (ventaLista.items_pedido[validosId].nombre_preparacion,pedidoPrep[validosId].nombre_preparacion);
-                fwrite (&ventaLista.items_pedido[validosId].nombre_preparacion,sizeof(char),1,pa);
+            strcpy (ventaLista.items_pedido[validosId].nombre_preparacion,pedidoPrep[validosId].nombre_preparacion);
+            fwrite (&ventaLista.items_pedido[validosId].nombre_preparacion,sizeof(char),1,pa);
 
-                ventaLista.items_pedido[validosId].cantidad=pedidoPrep[validosId].cantidad;
-                fwrite (&ventaLista.items_pedido[validosId].cantidad,sizeof(int),1,pa);
+            ventaLista.items_pedido[validosId].cantidad=pedidoPrep[validosId].cantidad;
+            fwrite (&ventaLista.items_pedido[validosId].cantidad,sizeof(int),1,pa);
 
-                ventaLista[validosId].cantItems=item;
-                fwrite (&ventaLista[validosId].cantItems,sizeof(int),1,pa);
+            ventaLista[validosId].cantItems=item;
+            fwrite (&ventaLista[validosId].cantItems,sizeof(int),1,pa);
 
-                valorTotal=costoTotalVenta (pedidoPrep,validosId,item,preciosPrep,validosRecetas);
-                ventaLista[validosId].valor_total=valorTotal;
-                fwrite (&ventaLista[validosId].valor_total,sizeof(float),1,pa);
+            valorTotal=costoTotalVenta (pedidoPrep,validosId,item,preciosPrep,validosRecetas);
+            ventaLista[validosId].valor_total=valorTotal;
+            fwrite (&ventaLista[validosId].valor_total,sizeof(float),1,pa);
 
-                ventaLista[validosId].baja=altaVenta;
-                fwrite (&ventaLista[validosId].baja,sizeof(int),1,pa);
+            ventaLista[validosId].baja=altaVenta;
+            fwrite (&ventaLista[validosId].baja,sizeof(int),1,pa);
 
-                printf("Desea continuar? s/n \n");
-                fflush(stdin);
-                scanf("%c",&cont);
-            }while (cont=='s' || cont=='S');
+            printf("Desea continuar? s/n \n");
+            fflush(stdin);
+            scanf("%c",&cont);
+        }while (cont=='s' || cont=='S');
 
 
-        }
+    }
 }
 */
 float costoTotalVenta (PedidoPreparacion pedidoPrep[],int validosId,int item,PrecioPreparacion preciosPrep[],int validosRecetas)
