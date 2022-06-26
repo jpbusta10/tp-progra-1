@@ -74,7 +74,7 @@ void mostrarListapreparado(PreparacionVenta[],int);
 void cargarPreciosPreparados (PrecioPreparacion[],int,Receta[]);
 void mostrarPrecios(PrecioPreparacion);
 void muestraListaPrecios(PrecioPreparacion[],int);
-void modificarPrecioPreparado ();
+void modificarPrecioPreparado(Receta[],int);
 //void ingresarNuevaVenta (PedidoPreparacion[],int*,int*);
 //void depersistenciaVentas (Venta[],PedidoPreparacion[],int,int,PrecioPreparacion[],int);
 float costoTotalVenta (PedidoPreparacion[],int,int,PrecioPreparacion[],int);
@@ -153,9 +153,13 @@ int main()
             break;
         case 3:
             printf ("3. Ingreso total del dia\n");
+            system ("PAUSE");
+            system ("cls");
             break;
         case 4:
             printf ("4. Ganancia total del dia\n");
+            system ("PAUSE");
+            system ("cls");
             break;
         case 5:
             system ("PAUSE");
@@ -189,7 +193,7 @@ int main()
             system ("cls");
                     break;
                 case 3:
-                    modificarPrecioPreparado ();
+                    modificarPrecioPreparado (recetas,validosRecetas);
                     system ("PAUSE");
                     system ("cls");
                     break;
@@ -215,7 +219,7 @@ int main()
                 }
 
             default:
-                printf ("usted esta volviendo al menu principal");
+                printf ("usted esta volviendo al menu principal\n");
                 break;
             }
 
@@ -520,7 +524,7 @@ void persistenciaPreparados(PreparacionVenta preparados[],int validos)
     }
 }
 
-void modificarPrecioPreparado ()
+void modificarPrecioPreparado(Receta recetas[],int validosReceta)
 {
     FILE* parch;
     parch=fopen ("precios.bin","r+b");
@@ -530,6 +534,11 @@ void modificarPrecioPreparado ()
     float precio;
     if (parch!=NULL)
     {
+        printf("de la siguiente lista: \n");
+        for(int i=0;i<validosReceta;i++)
+        {
+            printf("%s\n",recetas[i].nombre_preparacion);
+        }
         printf("Ingrese el nombre de la preparacion que desea cambiar el precio\n");
         fflush(stdin);
         gets(nombre);
@@ -542,12 +551,12 @@ void modificarPrecioPreparado ()
 
             if (strcmp(nombre,precios[i].nombre_preparacion)==0)
             {
-                printf("Ingrese el precio de: %s",precios[i].nombre_preparacion);
-                fflush(stdin);
+                printf("Ingrese el precio de: %s\n",precios[i].nombre_preparacion);
                 scanf("%f",&precio);
                 precios[i].precio_venta=precio;
                 fseek(parch,-1*(sizeof(PrecioPreparacion)),SEEK_CUR);
                 fwrite(&precios[i],sizeof(PrecioPreparacion),1,parch);
+                fseek(parch,sizeof(PrecioPreparacion),SEEK_CUR);
             }
         }
     }
