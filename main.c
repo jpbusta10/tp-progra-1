@@ -407,7 +407,7 @@ void preparar(Receta recetas[],int validosRecetas, StockIngrediente stock[],int 
     int flag;
     int flagRec;
     int maxim;
-    int n=-1;
+    int n=0;
     char ingrediente [TAM_MAX];
     fp=fopen("demanda.bin","rb");
     if(fp!=NULL)
@@ -450,9 +450,9 @@ void preparar(Receta recetas[],int validosRecetas, StockIngrediente stock[],int 
             }
             if(preparados!=0)
             {
-                n++;
                 strcpy(preparadosListos[n].nombre_preparacion,recetas[indice].nombre_preparacion);
                 preparadosListos[n].cantidad=preparados;
+                n++;
             }
         }
     }
@@ -467,12 +467,11 @@ void mostrarPreparado(PreparacionVenta preparado)
 
 void mostrarListapreparado(PreparacionVenta preparado[],int validos)
 {
-    for(int i=0; i <= validos; i++)
+    for(int i=0; i < validos; i++)
     {
         mostrarPreparado(preparado[i]);
     }
 }
-
 int busquedaStock(StockIngrediente stock[],int validosStock,char ingrediente[])
 {
     int indice=0;
