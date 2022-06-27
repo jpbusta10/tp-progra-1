@@ -85,11 +85,13 @@ void persistenciaStock(StockIngrediente[],int);
 //void descontarStockPreparados (PedidoPreparacion[]);/// necesito "stock preparados"
 void persistenciaPreparados(PreparacionVenta[],int);
 void muestraVentas();
+void despecistenciaPreparados(PreparacionVenta[],int*);
+
+
 
 int main()
 {
-
-FILE* parch;
+    FILE* parch;
     int opcion=0;
     char continuar;
     char control;
@@ -116,6 +118,10 @@ FILE* parch;
     {
         preparar(recetas,validosRecetas,stock,validosStock,preparados,&validosPreparados);
         persistenciaPreparados(preparados,validosPreparados);
+    }
+    else
+    {
+        despecistenciaPreparados(preparados,&validosPreparados);
     }
     fflush(stdin);
     while(true)
@@ -146,6 +152,7 @@ FILE* parch;
             break;
         case 2:
             printf ("2. Productos no vendidos\n");
+            despecistenciaPreparados(preparados,&validosPreparados);
             mostrarListapreparado(preparados,validosPreparados);
             printf("desea persistir los preparados? s/n\n");
             fflush(stdin);
@@ -297,6 +304,20 @@ FILE* parch;
     }while (control == 's' || continuar == 'S');
     */
     return 0;
+}
+void despecistenciaPreparados(PreparacionVenta preparados[],int* validosPreparados)
+{
+    FILE* fp;
+    fp=fopen("stockPreparados.bin","rb");
+    int i=0;
+    if(fp!=NULL)
+    {
+        while(fread(&preparados[i],sizeof(PreparacionVenta),1,fp)>0)
+        {
+            i++;
+        }
+        (*validosPreparados)=i;
+    }
 }
 void persistenciaStock(StockIngrediente stock [],int validosStock)
 {
