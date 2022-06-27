@@ -109,7 +109,7 @@ FILE* parch;
     despersistenciaStock(stock,&validosStock);
     despersistenciaReceta(recetas,&validosRecetas);
     //mostrarListapreparado(preparados,validosPreparados);
-    printf("desea preparar la demanda?")
+    printf("desea preparar la demanda?\n");
     fflush(stdin);
     scanf("&c",&continuar);
     if(continuar=='s'||continuar=='S')
