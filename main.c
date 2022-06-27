@@ -318,6 +318,7 @@ void despecistenciaPreparados(PreparacionVenta preparados[],int* validosPreparad
         }
         (*validosPreparados)=i;
     }
+    fclose(fp);
 }
 void persistenciaStock(StockIngrediente stock [],int validosStock)
 {
@@ -346,7 +347,7 @@ void despersistenciaStock(StockIngrediente lista [],int*validos)
         }
         (*validos)=i;
     }
-
+    fclose(fp);
 }
 void mostrarStock(StockIngrediente p)
 {
@@ -522,7 +523,7 @@ void mostrarPreparado(PreparacionVenta preparado)
 
 void mostrarListapreparado(PreparacionVenta preparado[],int validos)
 {
-    for(int i=0; i < validos; i++)
+    for(int i=0; i <= validos; i++)
     {
         mostrarPreparado(preparado[i]);
     }
@@ -545,6 +546,7 @@ void persistenciaPreparados(PreparacionVenta preparados[],int validos)
 {
     FILE* fp;
     fp=fopen("stockPreparados.bin","wb");
+    if(fp != NULL)
     {
         fwrite(preparados,sizeof(PreparacionVenta),validos,fp);
         fclose(fp);
