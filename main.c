@@ -79,18 +79,18 @@ void ingresarNuevaVenta(Receta[],int);
 float costoTotalVenta (PedidoPreparacion[],int,int,PrecioPreparacion[],int);
 void mostrarVenta (Venta);
 void mostrarListaVentas (Venta[],int);
-void devolucionVenta (Venta[],int);
+void devolucionVenta ();
 void persistenciaStock(StockIngrediente[],int);
 int descontarStockPreparados ();
 void persistenciaPreparados(PreparacionVenta[],int);
-void muestraVentas();
 void despecistenciaPreparados(PreparacionVenta[],int*);
+void despecistenciaVentas(Venta[],int*);
+int busquedaId(FILE*,int,Venta*);
 
 
 
 int main()
 {
-    FILE* parch;
     int opcion=0;
     char continuar;
     char control;
@@ -218,12 +218,13 @@ int main()
                     ingresarNuevaVenta(recetas,validosRecetas);
                     break;
                 case 5:
-                    muestraVentas();
+                    despecistenciaVentas(ventaLista,&validosVenta);
+                    mostrarListaVentas(ventaLista,validosVenta);
                     system ("PAUSE");
                     system ("cls");
                     break;
                 case 6:
-                    devolucionVenta (ventaLista,validosId);
+                    devolucionVenta ();
                     system ("PAUSE");
                     system ("cls");
                     break;
@@ -460,6 +461,7 @@ void preparar(Receta recetas[],int validosRecetas, StockIngrediente stock[],int 
     fclose(fp);
 }
 
+
 void mostrarPreparado(PreparacionVenta preparado)
 {
     printf("%s: %i\n",preparado.nombre_preparacion,preparado.cantidad);
@@ -467,11 +469,12 @@ void mostrarPreparado(PreparacionVenta preparado)
 
 void mostrarListapreparado(PreparacionVenta preparado[],int validos)
 {
-    for(int i=0; i < validos; i++)
+    for(int i=0; i <= validos; i++)
     {
         mostrarPreparado(preparado[i]);
     }
 }
+
 int busquedaStock(StockIngrediente stock[],int validosStock,char ingrediente[])
 {
     int indice=0;
@@ -609,7 +612,7 @@ void ingresarNuevaVenta (Receta recetas[],int validosRecetas)
             validosPrecios++;
         }
 
-    fclose(fp);
+        fclose(fp);
     }
 
     despecistenciaPreparados(stockPreparados,&validosPreparados);
@@ -637,9 +640,9 @@ void ingresarNuevaVenta (Receta recetas[],int validosRecetas)
                 indicePrecio=i;
             }
         }
-        for(int i=0;i<validosPreparados;i++)
+        for(int i=0; i<validosPreparados; i++)
         {
-            if(strcmp(stockPreparados[i].nombre_preparacion,nombre)==0)
+            if(strcmpi(stockPreparados[i].nombre_preparacion,nombre)==0)
             {
                 indicePreparados=i;
             }
@@ -682,14 +685,13 @@ void ingresarNuevaVenta (Receta recetas[],int validosRecetas)
         fread(vent,sizeof(Venta),val,jp);
     }
     fclose(jp);
-    printf("%i",(val));
     if(val==0)
     {
-    vent[val].idVenta=0;
+        vent[val].idVenta=0;
     }
     else
     {
-    vent[val].idVenta=v.idVenta;
+        vent[val].idVenta=v.idVenta;
     }
     vent[val].cantItems=v.cantItems;
     for(int i=0; i<vent[val].cantItems; i++)
@@ -709,22 +711,7 @@ void ingresarNuevaVenta (Receta recetas[],int validosRecetas)
     fclose(kk);
 
 }
-void muestraVentas()
-{
-    FILE* fp;
-    Venta ventas[TAM_MAX];
-    int val=0;
-    fp=fopen("ventas.bin","rb");
-    if(fp!=NULL)
-    {
-        fseek(fp,0,SEEK_END);
-        val=ftell(fp)/sizeof(Venta);
-        fseek(fp,0,SEEK_SET);
-        fread(&ventas,sizeof(Venta),val,fp);
-    }
-    fclose(fp);
-    mostrarListaVentas(ventas,val);
-}
+
 
 float costoTotalVenta (PedidoPreparacion pedidoPrep[],int validosId,int item,PrecioPreparacion preciosPrep[],int validosRecetas)
 {
@@ -756,31 +743,70 @@ void mostrarVenta (Venta v)
         printf("Pedido: -Preparacion: %s     -Cantidad: %i \n",v.items_pedido[i].nombre_preparacion,v.items_pedido[i].cantidad);
     }
     printf("Cantidad items: %i\n",v.cantItems);
-    printf("Valor total venta: %f\n",v.valor_total);
+    printf("Valor total venta: %.2f\n",v.valor_total);
+    //printf("baja: %i\n",v.baja);
 }
 
 void mostrarListaVentas(Venta ventaLista[],int validosId)
 {
     for(int i=0; i<validosId; i++)
     {
+
         mostrarVenta(ventaLista[i]);
+
     }
 }
 
-void devolucionVenta (Venta ventaLista[],int validosId)
+void devolucionVenta()
 {
-    char Id [TAM_MAX];
+    int id=0;
+    Venta ventas[TAM_MAX];
+    Venta v;
+    int validosVentas;
+    int indiceVenta=0;
+    int i=0;
     printf("Ingrese el Id de la venta que quiere dar de baja\n");
-    gets(Id);
-    for (int i=0; i<validosId; i++)
+    scanf("%i",&id);
+    FILE* fp;
+    fp=fopen("ventas.bin","r+b");
+    if(fp!=NULL)
     {
-        if (strcmpi(Id,ventaLista[i].idVenta)==0)
+        if(busquedaId(fp,id,&v)==1)
         {
-            ventaLista[i].baja=0;
-            printf("Se ha dado de baja la venta\n");
+            v.baja=1;
+            fseek(fp,sizeof(Venta)*-1,SEEK_CUR);
+            fwrite(&v,sizeof(Venta),1,fp);
+
         }
+        printf("usted a dado de baja la venta %i\n",id);
+
+        fclose(fp);
+
     }
 
 }
-
-
+void despecistenciaVentas(Venta ventas[],int* validosVentas)
+{
+    FILE* fp;
+    fp=fopen("ventas.bin","rb");
+    int i=0;
+    if(fp!=NULL)
+    {
+        while(fread(&ventas[i],sizeof(Venta),1,fp)>0)
+        {
+            if(ventas[i].baja==0)
+                i++;
+        }
+        (*validosVentas)=i;
+    }
+}
+int busquedaId(FILE* fp,int id,Venta* v)
+{
+    int flag=0;
+    while(fread(v,sizeof(Venta),1,fp)>0&&id!=(*v).idVenta);
+    if(ftell(fp)>0&&id==(*v).idVenta)
+    {
+        flag=1;
+    }
+    return flag;
+}
