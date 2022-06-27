@@ -76,7 +76,6 @@ void mostrarPrecios(PrecioPreparacion);
 void muestraListaPrecios(PrecioPreparacion[],int);
 void modificarPrecioPreparado(Receta[],int);
 void ingresarNuevaVenta(Receta[],int);
-//void depersistenciaVentas (Venta[],PedidoPreparacion[],int,int,PrecioPreparacion[],int);
 float costoTotalVenta (PedidoPreparacion[],int,int,PrecioPreparacion[],int);
 void mostrarVenta (Venta);
 void mostrarListaVentas (Venta[],int);
@@ -707,54 +706,7 @@ void muestraVentas()
     fclose(fp);
     mostrarListaVentas(ventas,val);
 }
-/*
 
-void persistenciaVentas (Venta ventaLista[],PedidoPreparacion pedidoPrep[],int validosId,int item,PrecioPreparacion preciosPrep[],int validosRecetas)
-{
-    FILE* pa;
-    char identificacion [TAM_MAX];
-    char cont;
-    int cantidad=0;
-    float valorTotal;
-    int altaVenta=1;
-    pa=fopen("ventas.bin","ab");
-    if (pa!=NULL)
-    {
-        do
-        {
-            printf("Ingresar identificacion del comprador: \n");
-            fflush(stdin);
-            gets (nombre);
-            strcpy (ventaLista[validosId].idVenta,nombre);
-            fwrite (&ventaLista[validosId].idVenta,sizeof(char),1,pa);
-
-            strcpy (ventaLista.items_pedido[validosId].nombre_preparacion,pedidoPrep[validosId].nombre_preparacion);
-            fwrite (&ventaLista.items_pedido[validosId].nombre_preparacion,sizeof(char),1,pa);
-
-            ventaLista.items_pedido[validosId].cantidad=pedidoPrep[validosId].cantidad;
-            fwrite (&ventaLista.items_pedido[validosId].cantidad,sizeof(int),1,pa);
-
-            ventaLista[validosId].cantItems=item;
-            fwrite (&ventaLista[validosId].cantItems,sizeof(int),1,pa);
-
-            valorTotal=costoTotalVenta (pedidoPrep,validosId,item,preciosPrep,validosRecetas);
-            ventaLista[validosId].valor_total=valorTotal;
-            fwrite (&ventaLista[validosId].valor_total,sizeof(float),1,pa);
-
-            ventaLista[validosId].baja=altaVenta;
-            fwrite (&ventaLista[validosId].baja,sizeof(int),1,pa);
-
-            printf("Desea continuar? s/n \n");
-            fflush(stdin);
-            scanf("%c",&cont);
-        }
-        while (cont=='s' || cont=='S');
-
-
-    }
-    fclose(pa);
-}
-*/
 float costoTotalVenta (PedidoPreparacion pedidoPrep[],int validosId,int item,PrecioPreparacion preciosPrep[],int validosRecetas)
 {
     float valor=0;
