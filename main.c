@@ -113,7 +113,7 @@ int main()
     //mostrarListapreparado(preparados,validosPreparados);
     printf("desea preparar la demanda?\n");
     fflush(stdin);
-    scanf("&c",&continuar);
+    scanf("%c",&continuar);
     if(continuar=='s'||continuar=='S')
     {
         preparar(recetas,validosRecetas,stock,validosStock,preparados,&validosPreparados);
@@ -443,7 +443,7 @@ int busquedaReceta(Receta lista[],int validosReceta,char nombrePreparacion[])//r
     int busqueda=0;
     for(int i=0; i<validosReceta; i++)
     {
-        if(strcmp(lista[i].nombre_preparacion,nombrePreparacion)==0)
+        if(strcmpi(lista[i].nombre_preparacion,nombrePreparacion)==0)
         {
             busqueda=i;
         }
@@ -533,7 +533,7 @@ int busquedaStock(StockIngrediente stock[],int validosStock,char ingrediente[])
     int indice=0;
     for(int i=0; i<validosStock; i++)
     {
-        if(strcmp(stock[i].nombre_ingrediente,ingrediente)==0)
+        if(strcmpi(stock[i].nombre_ingrediente,ingrediente)==0)
         {
             indice=i;
         }
@@ -576,7 +576,7 @@ void modificarPrecioPreparado(Receta recetas[],int validosReceta)
         {
             fread(&precios[i],sizeof(PrecioPreparacion),1,parch);
 
-            if (strcmp(nombre,precios[i].nombre_preparacion)==0)
+            if (strcmpi(nombre,precios[i].nombre_preparacion)==0)
             {
                 printf("Ingrese el precio de: %s\n",precios[i].nombre_preparacion);
                 scanf("%f",&precio);
