@@ -68,7 +68,7 @@ void muestraReceta(Receta);
 void muestraListaRecetas(Receta[],int);
 int busquedaReceta(Receta[],int,char[]);
 int busquedaStock(StockIngrediente[],int,char[]);
-void preparar(Receta[],int, StockIngrediente[],int, PreparacionVenta[],int*);
+void preparar(Receta[],int, StockIngrediente[],int, PreparacionVenta[],int*,float*);
 void mostrarPreparado(PreparacionVenta);
 void mostrarListapreparado(PreparacionVenta[],int);
 void cargarPreciosPreparados (PrecioPreparacion[],int,Receta[]);
@@ -86,6 +86,8 @@ void persistenciaPreparados(PreparacionVenta[],int);
 void despecistenciaPreparados(PreparacionVenta[],int*);
 void despecistenciaVentas(Venta[],int*);
 int busquedaId(FILE*,int,Venta*);
+void ganancia(float costo);
+float ingresos();
 
 
 
@@ -101,6 +103,7 @@ int main()
     int validosPreparados=0;
     int validosVenta=0;
     int item=0;
+    float costo=0;
     StockIngrediente stock [TAM_MAX];
     Receta recetas[TAM_MAX];
     PrecioPreparacion preciosPrep [TAM_MAX];
@@ -128,7 +131,7 @@ int main()
             scanf("%c",&continuar);
             if(continuar=='s'||continuar=='S')
             {
-                preparar(recetas,validosRecetas,stock,validosStock,preparados,&validosPreparados);
+                preparar(recetas,validosRecetas,stock,validosStock,preparados,&validosPreparados,&costo);
             }
             else
             {
@@ -170,11 +173,14 @@ int main()
             break;
         case 4:
             printf ("4. Ingreso total del dia\n");
+            ingresos();
             system ("PAUSE");
             system ("cls");
             break;
         case 5:
-            printf ("5. Ganancia total del dia\n");
+            printf ("5. Ganancia total del dia:\n");
+            printf("costo: %.2f\n",costo);
+            ganancia(costo);
             system ("PAUSE");
             system ("cls");
             break;
@@ -396,7 +402,7 @@ int busquedaReceta(Receta lista[],int validosReceta,char nombrePreparacion[])//r
     }
     return busqueda;
 }
-void preparar(Receta recetas[],int validosRecetas, StockIngrediente stock[],int validosStock, PreparacionVenta preparadosListos[],int* validosPreparados)
+void preparar(Receta recetas[],int validosRecetas, StockIngrediente stock[],int validosStock, PreparacionVenta preparadosListos[],int* validosPreparados,float* acumuladorCosto)
 {
     FILE* fp;
     int validosDemanda=0;
@@ -435,6 +441,7 @@ void preparar(Receta recetas[],int validosRecetas, StockIngrediente stock[],int 
                     {
                         aModificar=(recetas[indice].ingredientes[j].cantidad);
                         stock[indicS].cantidad=stock[indicS].cantidad-aModificar;
+                        (*acumuladorCosto)=(*acumuladorCosto)+(aModificar*stock[indicS].costo);
                         flag++;
                     }
                 }
@@ -809,4 +816,26 @@ int busquedaId(FILE* fp,int id,Venta* v)
         flag=1;
     }
     return flag;
+}
+float ingresos()
+{
+    Venta ventas[TAM_MAX];
+    int validosVentas=0;
+    float suma=0;
+    despecistenciaVentas(ventas,&validosVentas);
+    for(int i=0;i<validosVentas;i++)
+    {
+        suma=suma+ventas[i].valor_total;
+    }
+    printf("los ingresos totales son %.2f\n",suma);
+    return suma;
+}
+void ganancia(float costo)
+{
+    float ing=0;
+    float gan=0;
+    ing=ingresos();
+    gan=ing-costo;
+    printf("La ganancia total es de %.2f\n",gan);
+
 }
