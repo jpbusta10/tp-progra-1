@@ -813,3 +813,72 @@ void devolucionVenta (Venta ventaLista[],int validosId)
 
 }
 
+
+int descontarStockPreparados ()/// necesito "stockventa", stock de preaprados para la venta,se puede quedar sin stock
+{
+    FILE* fpa;
+    int flag=1;
+    Venta ventas[TAM_MAX];
+    int valVentas=0;
+    fpa=fopen("ventas.bin","rb");
+    if(fpa!=NULL)
+    {
+        fseek(fpa,0,SEEK_END);
+        valVentas=ftell(fpa)/sizeof(Venta);
+        fseek(fpa,0,SEEK_SET);
+
+        //val = cantidad de ventas realizadas
+
+        fread(&ventas,sizeof(Venta),valVentas,fpa);
+
+        //leo las ventas en el arreglo "ventas"
+
+
+    }
+    fclose(fpa);
+
+
+    //------------------
+
+    FILE*pfile;
+    int valPrep=0;
+    PreparacionVenta preparados [TAM_MAX];
+    pfile=fopen("stockventa.bin","r+b");
+    if(pfile!=NULL)
+    {
+        fseek(pfile,0,SEEK_END);
+        valPrep=ftell(pfile)/sizeof(PreparacionVenta);
+        fread(&preparados,sizeof(PreparacionVenta),valPrep,pfile);
+
+        //leo cantidad de preparados
+
+        fseek(pfile,0,SEEK_SET);
+
+            for (int i=0;i<valVentas;i++)
+            {
+               for (int j=0;j<valPrep;j++)
+                {
+                    for (int k=0;k<(&ventas[i].cantItems);k++)
+                    {
+                            fread(&preparados,sizeof(PreparacionVenta),1,pfile);
+                        if (strcmpi(&ventas[i].items_pedido[k].nombre_preparacion,&preparados[j].nombre_preparacion)==0)
+                        {
+                              (&preparados[j].cantidad)=(&preparados[j].cantidad)-(&ventas[i].items_pedido[k].cantidad);
+                              if ((&preparados[j].cantidad)<0)
+                              {
+                                  flag=0;
+                              }
+                              fseek(pfile,-1*sizeof(PreparacionVenta),SEEK_CUR);
+                              fwrite(&preparados[j].cantidad,sizeof(PreparacionVenta),1,pfile);
+                        }
+
+
+                    }
+                    }
+            }
+
+    }
+    fclose(pfile);
+    mostrarListapreparado(preparados,valPrep);
+    return flag;
+}
