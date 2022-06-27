@@ -197,7 +197,7 @@ int main()
                 printf ("3. Modificar precio de preparado\n");
                 printf ("4. Ingresar una nueva venta\n");
                 printf ("5. Mostrar ventas\n");
-                printf ("6. Devolucion de venta\n");
+                printf ("6. Baja de venta\n");
 
 
                 scanf ("%i",&opcion);
