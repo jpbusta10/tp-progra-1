@@ -82,7 +82,7 @@ void mostrarVenta (Venta);
 void mostrarListaVentas (Venta[],int);
 void devolucionVenta (Venta[],int);
 void persistenciaStock(StockIngrediente[],int);
-void descontarStockPreparados ();
+int descontarStockPreparados ();
 void persistenciaPreparados(PreparacionVenta[],int);
 void muestraVentas();
 void despecistenciaPreparados(PreparacionVenta[],int*);
@@ -213,7 +213,6 @@ int main()
                     break;
                 case 4:
                     ingresarNuevaVenta(validosVenta,recetas,validosRecetas);
-                    descontarStockPreparados ();
                     break;
                 case 5:
                     muestraVentas();
