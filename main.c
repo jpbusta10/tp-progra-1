@@ -91,7 +91,6 @@ void despecistenciaPreparados(PreparacionVenta[],int*);
 
 int main()
 {
-    FILE* parch;
     int opcion=0;
     char continuar;
     char control;
@@ -110,34 +109,39 @@ int main()
     Venta ventaLista [TAM_MAX];
     despersistenciaStock(stock,&validosStock);
     despersistenciaReceta(recetas,&validosRecetas);
-    //mostrarListapreparado(preparados,validosPreparados);
-    printf("desea preparar la demanda?\n");
-    fflush(stdin);
-    scanf("%c",&continuar);
-    if(continuar=='s'||continuar=='S')
-    {
-        preparar(recetas,validosRecetas,stock,validosStock,preparados,&validosPreparados);
-        persistenciaPreparados(preparados,validosPreparados);
-    }
-    else
-    {
-        despecistenciaPreparados(preparados,&validosPreparados);
-    }
-    fflush(stdin);
     while(true)
     {
         printf ("Ingrese opcion:\n");
-        printf ("1. Ver ingredientes no utilizados\n");
-        printf ("2. Ver productos no vendidos\n");
-        printf ("3. Ver ingreso total del dia\n");
-        printf ("4. Ver ganancia total del dia\n");
-        printf("5. Menu ventas\n");
+        printf("1. Preparar demanda\n");
+        printf ("2. Ver ingredientes no utilizados\n");
+        printf ("3. Ver productos no vendidos\n");
+        printf ("4. Ver ingreso total del dia\n");
+        printf ("5. Ver ganancia total del dia\n");
+        printf("6. Menu ventas\n");
         scanf ("%i",&opcion);
 
         switch (opcion)
         {
         case 1:
-            printf ("1. Ingredientes no utilizados\n");
+            printf("desea preparar la demanda?\n");
+            fflush(stdin);
+            scanf("%c",&continuar);
+            if(continuar=='s'||continuar=='S')
+            {
+                preparar(recetas,validosRecetas,stock,validosStock,preparados,&validosPreparados);
+                persistenciaPreparados(preparados,validosPreparados);
+            }
+            else
+            {
+                despecistenciaPreparados(preparados,&validosPreparados);
+            }
+            fflush(stdin);
+            system ("PAUSE");
+            system ("cls");
+            break;
+
+        case 2:
+            printf ("2. Ingredientes no utilizados\n");
             muestraListaStock(stock,validosStock);
             printf("desea persistir el stock? s/n\n");
             fflush(stdin);
@@ -150,8 +154,8 @@ int main()
             system ("PAUSE");
             system ("cls");
             break;
-        case 2:
-            printf ("2. Productos no vendidos\n");
+        case 3:
+            printf ("3. Productos no vendidos\n");
             despecistenciaPreparados(preparados,&validosPreparados);
             mostrarListapreparado(preparados,validosPreparados);
             printf("desea persistir los preparados? s/n\n");
@@ -161,21 +165,21 @@ int main()
             {
                 persistenciaPreparados(preparados,validosPreparados);
             }
-            continuar = 'j';
-            system ("PAUSE");
-            system ("cls");
-            break;
-        case 3:
-            printf ("3. Ingreso total del dia\n");
+            fflush(stdin);
             system ("PAUSE");
             system ("cls");
             break;
         case 4:
-            printf ("4. Ganancia total del dia\n");
+            printf ("4. Ingreso total del dia\n");
             system ("PAUSE");
             system ("cls");
             break;
         case 5:
+            printf ("5. Ganancia total del dia\n");
+            system ("PAUSE");
+            system ("cls");
+            break;
+        case 6:
             system ("PAUSE");
             system ("cls");
             while (true)
@@ -213,6 +217,7 @@ int main()
                     break;
                 case 4:
                     ingresarNuevaVenta(validosVenta,recetas,validosRecetas);
+                    //descontarStockPreparados ();
                     break;
                 case 5:
                     muestraVentas();
@@ -242,66 +247,6 @@ int main()
 
 
     }
-
-
-
-
-//SUBMENU VENTAS
-
-    /*system ("PAUSE");
-    system ("cls");
-
-    do
-    {
-    printf ("VENTAS:\n");
-    printf ("\n");
-    printf ("Ingrese la operacion que desea realizar:\n");
-    printf ("1. Cargar precios preparados\n");
-    printf ("2. Mostrar lista precios\n");
-    printf ("3. Modificar precio de preparado\n");
-    printf ("4. Ingresar una nueva venta\n");
-    printf ("5. Mostrar ventas\n");
-    printf ("6. Devolucion de venta\n");
-
-    scanf ("%i",&opcion);
-
-        switch (opcion)
-        {
-        case 1:
-
-            cargarPreciosPreparados (preciosPrep,validosRecetas,recetas);
-            break;
-        case 2:
-            muestraListaPrecios(preciosPrep,validosRecetas);
-            break;
-        case 3:
-            modificarPrecioPreparado ();
-            break;
-        case 4:
-            //ingresarNuevaVenta (pedidoPrep,&validosId,&item);
-            descontarStockPreparados ();
-            //depersistenciaVentas (ventaLista,pedidoPrep,validosId,item,preciosPrep,validosRecetas);
-            break;
-        case 5:
-            mostrarListaVentas (ventaLista,validosId);
-            break;
-        case 6:
-            devolucionVenta (ventaLista,validosId);
-            break;
-        default:
-            printf ("La opcion ingresada no existe\n");
-            break;
-        }
-
-    printf("Desea continuar?\n");
-    fflush(stdin);
-    scanf("%c",&control);
-
-    system ("PAUSE");
-    system ("cls");
-
-    }while (control == 's' || continuar == 'S');
-    */
     return 0;
 }
 void despecistenciaPreparados(PreparacionVenta preparados[],int* validosPreparados)
