@@ -213,7 +213,7 @@ int main()
                     break;
                 case 4:
                     ingresarNuevaVenta(validosVenta,recetas,validosRecetas);
-                    //        descontarStockPreparados (pedidoPrep,)/// necesito "stock preparados"
+                    descontarStockPreparados ();
                     break;
                 case 5:
                     muestraVentas();
