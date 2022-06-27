@@ -86,7 +86,7 @@ void persistenciaStock(StockIngrediente[],int);
 void persistenciaPreparados(PreparacionVenta[],int);
 void muestraVentas();
 
-int main
+int main()
 {
 
 FILE* parch;
