@@ -839,3 +839,4 @@ void ganancia(float costo)
     printf("La ganancia total es de %.2f\n",gan);
 
 }
+
