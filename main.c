@@ -117,6 +117,7 @@ FILE* parch;
         preparar(recetas,validosRecetas,stock,validosStock,preparados,&validosPreparados);
         persistenciaPreparados(preparados,validosPreparados);
     }
+    fflush(stdin);
     while(true)
     {
         printf ("Ingrese opcion:\n");
