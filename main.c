@@ -82,7 +82,7 @@ void mostrarVenta (Venta);
 void mostrarListaVentas (Venta[],int);
 void devolucionVenta (Venta[],int);
 void persistenciaStock(StockIngrediente[],int);
-int descontarStockPreparados ();
+//void descontarStockPreparados ();
 void persistenciaPreparados(PreparacionVenta[],int);
 void muestraVentas();
 void despecistenciaPreparados(PreparacionVenta[],int*);
@@ -91,6 +91,7 @@ void despecistenciaPreparados(PreparacionVenta[],int*);
 
 int main()
 {
+    FILE* parch;
     int opcion=0;
     char continuar;
     char control;
@@ -247,6 +248,7 @@ int main()
 
 
     }
+
     return 0;
 }
 void despecistenciaPreparados(PreparacionVenta preparados[],int* validosPreparados)
@@ -584,10 +586,8 @@ void muestraListaPrecios(PrecioPreparacion preciosPrep[],int validosRecetas)
 }
 
 
-
 void ingresarNuevaVenta (int* validosVentas,Receta recetas[],int validosRecetas)
 {
-    int flag=0;
     char nombre [TAM_MAX];
     char cont;
     int item=0;
@@ -623,17 +623,7 @@ void ingresarNuevaVenta (int* validosVentas,Receta recetas[],int validosRecetas)
         strcpy (v.items_pedido[item].nombre_preparacion,nombre);
         printf("Ingrese la cantidad a vender: \n");
         scanf("%i",&cantidad);
-
-        //hay stock preparados la venta??
-
-        flag=descontarStockPreparados ();
-        if (flag==0)
-        {
-            printf("No se encuentra la cantidad solicitada en stock preparados\n");
-        }
-        if (flag==1)
-        {
-                    for(int i=0; i<validosPrecios; i++)
+        for(int i=0; i<validosPrecios; i++)
         {
             if(strcmp(precios[i].nombre_preparacion,nombre)==0)
             {
@@ -653,9 +643,6 @@ void ingresarNuevaVenta (int* validosVentas,Receta recetas[],int validosRecetas)
         scanf("%c",&cont);
         contador++;
         printf("el total de la venta es: %.2f\n",acumulador);
-        }
-
-
     }
     while (cont=='s' || cont=='S' && item<=20);
     v.cantItems=item;
@@ -801,12 +788,11 @@ void devolucionVenta (Venta ventaLista[],int validosId)
     }
 
 }
+/*
 
-
-int descontarStockPreparados ()/// necesito "stockventa", stock de preaprados para la venta,se puede quedar sin stock
+void descontarStockPreparados ()/// necesito "stockventa", stock de preaprados para la venta,se puede quedar sin stock
 {
     FILE* fpa;
-    int flag=1;
     Venta ventas[TAM_MAX];
     int valVentas=0;
     fpa=fopen("ventas.bin","rb");
@@ -848,13 +834,9 @@ int descontarStockPreparados ()/// necesito "stockventa", stock de preaprados pa
                for (int j=0;j<valPrep;j++)
                 {
                     fread(&preparados,sizeof(PreparacionVenta),1,pfile);
-                    if (strcmpi(&ventas[i].items_pedido.nombre_preparacion,&preparados[j].nombre_preparacion)==0)
+                    if (strcmpi(ventas[i].items_pedido.nombre_preparacion,&preparados[j].nombre_preparacion)==0)
                     {
                           (&preparados[j].cantidad)-=(&ventas[i].items_pedido.cantidad);
-                          if ((&preparados[j].cantidad)<0)
-                          {
-                              flag=0;
-                          }
                           fseek(pfile,-1*sizeof(PreparacionVenta),SEEK_CUR);
                           fwrite(&preparados[j].cantidad,sizeof(PreparacionVenta),1,pfile);
                     }
@@ -864,6 +846,6 @@ int descontarStockPreparados ()/// necesito "stockventa", stock de preaprados pa
     }
     fclose(pfile);
     mostrarListapreparado(preparados,valPrep);
-    return flag;
 }
 
+*/
