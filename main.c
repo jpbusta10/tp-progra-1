@@ -86,11 +86,10 @@ void persistenciaStock(StockIngrediente[],int);
 void persistenciaPreparados(PreparacionVenta[],int);
 void muestraVentas();
 
-
-
-int main()
+int main
 {
-    FILE* parch;
+
+FILE* parch;
     int opcion=0;
     char continuar;
     char control;
@@ -109,10 +108,15 @@ int main()
     Venta ventaLista [TAM_MAX];
     despersistenciaStock(stock,&validosStock);
     despersistenciaReceta(recetas,&validosRecetas);
-    preparar(recetas,validosRecetas,stock,validosStock,preparados,&validosPreparados);
-    persistenciaPreparados(preparados,validosPreparados);
     //mostrarListapreparado(preparados,validosPreparados);
-
+    printf("desea preparar la demanda?")
+    fflush(stdin);
+    scanf("&c",&continuar);
+    if(continuar=='s'||continuar=='S')
+    {
+        preparar(recetas,validosRecetas,stock,validosStock,preparados,&validosPreparados);
+        persistenciaPreparados(preparados,validosPreparados);
+    }
     while(true)
     {
         printf ("Ingrese opcion:\n");
