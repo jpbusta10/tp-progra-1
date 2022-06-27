@@ -859,9 +859,10 @@ void devolucionVenta (Venta ventaLista[],int validosId)
 }
 
 
-void descontarStockPreparados ()/// necesito "stockventa", stock de preaprados para la venta,se puede quedar sin stock
+int descontarStockPreparados ()/// necesito "stockventa", stock de preaprados para la venta,se puede quedar sin stock
 {
     FILE* fpa;
+    int flag=1;
     Venta ventas[TAM_MAX];
     int valVentas=0;
     fpa=fopen("ventas.bin","rb");
@@ -906,6 +907,10 @@ void descontarStockPreparados ()/// necesito "stockventa", stock de preaprados p
                     if (strcmpi(&ventas[i].items_pedido.nombre_preparacion,&preparados[j].nombre_preparacion)==0)
                     {
                           (&preparados[j].cantidad)-=(&ventas[i].items_pedido.cantidad);
+                          if ((&preparados[j].cantidad)<0)
+                          {
+                              flag=0;
+                          }
                           fseek(pfile,-1*sizeof(PreparacionVenta),SEEK_CUR);
                           fwrite(&preparados[j].cantidad,sizeof(PreparacionVenta),1,pfile);
                     }
@@ -915,4 +920,6 @@ void descontarStockPreparados ()/// necesito "stockventa", stock de preaprados p
     }
     fclose(pfile);
     mostrarListapreparado(preparados,valPrep);
+    return flag;
 }
+
