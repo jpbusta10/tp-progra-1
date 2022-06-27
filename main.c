@@ -476,7 +476,7 @@ void mostrarPreparado(PreparacionVenta preparado)
 
 void mostrarListapreparado(PreparacionVenta preparado[],int validos)
 {
-    for(int i=0; i <= validos; i++)
+    for(int i=0; i < validos; i++)
     {
         mostrarPreparado(preparado[i]);
     }
