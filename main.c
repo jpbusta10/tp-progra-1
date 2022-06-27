@@ -640,8 +640,10 @@ void muestraListaPrecios(PrecioPreparacion preciosPrep[],int validosRecetas)
 }
 
 
+
 void ingresarNuevaVenta (int* validosVentas,Receta recetas[],int validosRecetas)
 {
+    int flag=0;
     char nombre [TAM_MAX];
     char cont;
     int item=0;
@@ -677,7 +679,17 @@ void ingresarNuevaVenta (int* validosVentas,Receta recetas[],int validosRecetas)
         strcpy (v.items_pedido[item].nombre_preparacion,nombre);
         printf("Ingrese la cantidad a vender: \n");
         scanf("%i",&cantidad);
-        for(int i=0; i<validosPrecios; i++)
+
+        //hay stock preparados la venta??
+
+        flag=descontarStockPreparados ();
+        if (flag==0)
+        {
+            printf("No se encuentra la cantidad solicitada en stock preparados\n");
+        }
+        if (flag==1)
+        {
+                    for(int i=0; i<validosPrecios; i++)
         {
             if(strcmp(precios[i].nombre_preparacion,nombre)==0)
             {
@@ -697,6 +709,9 @@ void ingresarNuevaVenta (int* validosVentas,Receta recetas[],int validosRecetas)
         scanf("%c",&cont);
         contador++;
         printf("el total de la venta es: %.2f\n",acumulador);
+        }
+
+
     }
     while (cont=='s' || cont=='S' && item<=20);
     v.cantItems=item;
