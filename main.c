@@ -75,14 +75,14 @@ void cargarPreciosPreparados (PrecioPreparacion[],int,Receta[]);
 void mostrarPrecios(PrecioPreparacion);
 void muestraListaPrecios(PrecioPreparacion[],int);
 void modificarPrecioPreparado(Receta[],int);
-void ingresarNuevaVenta(int*,Receta[],int);
+void ingresarNuevaVenta(Receta[],int);
 //void depersistenciaVentas (Venta[],PedidoPreparacion[],int,int,PrecioPreparacion[],int);
 float costoTotalVenta (PedidoPreparacion[],int,int,PrecioPreparacion[],int);
 void mostrarVenta (Venta);
 void mostrarListaVentas (Venta[],int);
 void devolucionVenta (Venta[],int);
 void persistenciaStock(StockIngrediente[],int);
-//void descontarStockPreparados ();
+//void descontarStockPreparados (PedidoPreparacion[]);/// necesito "stock preparados"
 void persistenciaPreparados(PreparacionVenta[],int);
 void muestraVentas();
 void despecistenciaPreparados(PreparacionVenta[],int*);
@@ -217,7 +217,7 @@ int main()
                     system ("cls");
                     break;
                 case 4:
-                    ingresarNuevaVenta(validosVenta,recetas,validosRecetas);
+                    ingresarNuevaVenta(recetas,validosRecetas);
                     //descontarStockPreparados ();
                     break;
                 case 5:
@@ -251,6 +251,7 @@ int main()
 
     return 0;
 }
+
 void despecistenciaPreparados(PreparacionVenta preparados[],int* validosPreparados)
 {
     FILE* fp;
@@ -586,8 +587,9 @@ void muestraListaPrecios(PrecioPreparacion preciosPrep[],int validosRecetas)
 }
 
 
-void ingresarNuevaVenta (int* validosVentas,Receta recetas[],int validosRecetas)
+void ingresarNuevaVenta (Receta recetas[],int validosRecetas)
 {
+    int flag=0;
     char nombre [TAM_MAX];
     char cont;
     int item=0;
@@ -623,21 +625,25 @@ void ingresarNuevaVenta (int* validosVentas,Receta recetas[],int validosRecetas)
         strcpy (v.items_pedido[item].nombre_preparacion,nombre);
         printf("Ingrese la cantidad a vender: \n");
         scanf("%i",&cantidad);
+
+        //hay stock preparados la venta??
+
+        //flag=descontarStockPreparados ();
+
+
         for(int i=0; i<validosPrecios; i++)
         {
-            if(strcmp(precios[i].nombre_preparacion,nombre)==0)
+            if(strcmp(precios[i].nombre_preparacion,nombre)==0) //Busca el indice del item pedido en el arreglo de precios.
             {
                 indicePrecio=i;
             }
         }
         valorItem=cantidad*precios[indicePrecio].precio_venta;
         printf("el valor de su pedido es de %.2f\n",valorItem);
-
         v.items_pedido[item].cantidad=cantidad;
         item++;
         v.valor_total=acumulador+valorItem;
         acumulador=acumulador+valorItem;
-        (*validosVentas)++;
         printf("Desea agregar mas items? s/n \n");
         fflush(stdin);
         scanf("%c",&cont);
@@ -646,24 +652,42 @@ void ingresarNuevaVenta (int* validosVentas,Receta recetas[],int validosRecetas)
     }
     while (cont=='s' || cont=='S' && item<=20);
     v.cantItems=item;
-    printf("valor item %i\n",item);
     FILE* jp;
     Venta vent[TAM_MAX];
     jp=fopen("ventas.bin","rb");
+    int val=0;
     if(jp!=NULL)
     {
-        int val=0;
         fseek(jp,0,SEEK_END);
         val=ftell(jp)/sizeof(Venta);
         fseek(jp,0,SEEK_SET);
-        v.idVenta=val+1;
+        v.idVenta=val;
+        fread(vent,sizeof(Venta),val,jp);
     }
     fclose(jp);
+    printf("%i",(val));
+    if(val==0)
+    {
+    vent[val].idVenta=0;
+    }
+    else
+    {
+    vent[val].idVenta=v.idVenta;
+    }
+    vent[val].cantItems=v.cantItems;
+    for(int i=0; i<vent[val].cantItems; i++)
+    {
+        strcpy(vent[val].items_pedido[i].nombre_preparacion,v.items_pedido[i].nombre_preparacion);
+        vent[val].items_pedido[i].cantidad=v.items_pedido[i].cantidad;
+    }
+    vent[val].valor_total=v.valor_total;
+    vent[val].baja=0;
+    mostrarVenta(vent[val]);
     FILE*kk;
-    kk=fopen("ventas.bin","ab");
+    kk=fopen("ventas.bin","wb");
     if(kk!=NULL)
     {
-        fwrite(&v,sizeof(Venta),1,kk);
+        fwrite(vent,sizeof(Venta),(val+1),kk);
     }
     fclose(kk);
 
@@ -788,75 +812,4 @@ void devolucionVenta (Venta ventaLista[],int validosId)
     }
 
 }
-/*
 
-int descontarStockPreparados ()/// necesito "stockventa", stock de preaprados para la venta,se puede quedar sin stock
-{
-    FILE* fpa;
-    int flag=1;
-    Venta ventas[TAM_MAX];
-    int valVentas=0;
-    fpa=fopen("ventas.bin","rb");
-    if(fpa!=NULL)
-    {
-        fseek(fpa,0,SEEK_END);
-        valVentas=ftell(fpa)/sizeof(Venta);
-        fseek(fpa,0,SEEK_SET);
-
-        //val = cantidad de ventas realizadas
-
-        fread(&ventas,sizeof(Venta),valVentas,fpa);
-
-        //leo las ventas en el arreglo "ventas"
-
-
-    }
-    fclose(fpa);
-
-
-    //------------------
-
-    FILE*pfile;
-    int valPrep=0;
-    PreparacionVenta preparados [TAM_MAX];
-    pfile=fopen("stockventa.bin","r+b");
-    if(pfile!=NULL)
-    {
-        fseek(pfile,0,SEEK_END);
-        valPrep=ftell(pfile)/sizeof(PreparacionVenta);
-        fread(&preparados,sizeof(PreparacionVenta),valPrep,pfile);
-
-        //leo cantidad de preparados
-
-        fseek(pfile,0,SEEK_SET);
-
-            for (int i=0;i<valVentas;i++)
-            {
-               for (int j=0;j<valPrep;j++)
-                {
-                    for (int k=0;k<(&ventas[i].cantItems);k++)
-                    {
-                            fread(&preparados,sizeof(PreparacionVenta),1,pfile);
-                        if (strcmpi(&ventas[i].items_pedido[k].nombre_preparacion,&preparados[j].nombre_preparacion)==0)
-                        {
-                              (&preparados[j].cantidad)=(&preparados[j].cantidad)-(&ventas[i].items_pedido[k].cantidad);
-                              if ((&preparados[j].cantidad)<0)
-                              {
-                                  flag=0;
-                              }
-                              fseek(pfile,-1*sizeof(PreparacionVenta),SEEK_CUR);
-                              fwrite(&preparados[j].cantidad,sizeof(PreparacionVenta),1,pfile);
-                        }
-
-
-                    }
-                    }
-            }
-
-    }
-    fclose(pfile);
-    mostrarListapreparado(preparados,valPrep);
-    return flag;
-}
-
-*/
