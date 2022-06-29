@@ -137,7 +137,13 @@ int main()
             {
                 despecistenciaPreparados(preparados,&validosPreparados);
             }
+            printf("desaa persistir los preparados?\n");
             fflush(stdin);
+            scanf("%c",&continuar);
+            if(continuar=='s'||continuar=='S')
+            {
+                persistenciaPreparados(preparados,validosPreparados);
+            }
             system ("PAUSE");
             system ("cls");
             break;
